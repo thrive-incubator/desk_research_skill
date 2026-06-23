@@ -4,6 +4,7 @@ set -euo pipefail
 DEST="$HOME/.claude/skills/thrive-desk-research"
 URL="https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/SKILL.md"
 
+rm -rf "$DEST"
 mkdir -p "$DEST"
 curl -sSL "$URL" -o "$DEST/SKILL.md"
 

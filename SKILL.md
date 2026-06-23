@@ -14,6 +14,7 @@ description: >-
   competitors, or decide spin-out / spin-in / shutdown. Triggers on "run desk
   research on this idea", "evaluate this venture", "Stage 1 on X", "size this
   market", "is there demand for X".
+user-invocable: true
 ---
 
 # Thrive Studio — Stage 1 Desk Research
