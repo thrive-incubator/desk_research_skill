@@ -28,16 +28,8 @@ Claude will ask a few clarifying questions, research the market and competitive 
 ## Repository structure
 
 ```
-SKILL.md                         # Skill definition and workflow
-assets/                          # Reference materials
-evals/                           # Evaluation test cases
-references/
-  context/                       # Thrive Studio context docs
-  method/                        # Research methodologies
-  templates/                     # Output templates
-scripts/
-  build_docx.py                  # Markdown → .docx renderer
-install.sh                       # One-line installer
+SKILL.md       # Self-contained skill (all context, methods, and templates inlined)
+install.sh     # One-line installer
 ```
 
 ## License
