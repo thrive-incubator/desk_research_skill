@@ -9,13 +9,11 @@ Built for ventures at the intersection of **children's mental health and the wor
 
 ## Install
 
-Just [Claude Desktop](https://claude.ai/download). `curl` and `unzip` come pre-installed on macOS and most Linux distros.
+1. Create the folder `~/.claude/skills/thrive-desk-research/`
+2. Drop `SKILL.md` into it
+3. Restart Claude Desktop
 
-```bash
-curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
-```
-
-Restart Claude Desktop after installing.
+That's it.
 
 ## Usage
 
@@ -24,13 +22,6 @@ In Claude Desktop, share a venture brief or concept and ask it to run desk resea
 > Run Stage 1 desk research on this idea: [paste brief]
 
 Claude will ask a few clarifying questions, research the market and competitive landscape, then produce both documents as Markdown.
-
-## Repository structure
-
-```
-SKILL.md       # Self-contained skill (all context, methods, and templates inlined)
-install.sh     # One-line installer
-```
 
 ## License
 
