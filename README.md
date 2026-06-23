@@ -9,7 +9,7 @@ Built for ventures at the intersection of **children's mental health and the wor
 
 ## Install
 
-Just [Claude Desktop](https://claude.ai/download). That's it — `curl` and `unzip` are already on your Mac.
+Just [Claude Desktop](https://claude.ai/download). `curl` and `unzip` come pre-installed on macOS and most Linux distros.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
