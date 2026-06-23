@@ -7,11 +7,17 @@ A Claude skill that runs Thrive Studio's **Stage 1 desk research** on a proposed
 
 ## Quick start
 
-Open Claude Desktop, start a new chat, and paste the contents of [`SKILL.md`](https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/SKILL.md) as your first message. Then share a venture brief and ask it to run desk research.
+Open Claude Desktop, start a new chat, and paste this:
 
-## Install as a skill
+```
+Read the skill at https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/SKILL.md and follow its instructions.
+```
 
-This gives you the `/thrive-desk-research` command. Open Terminal and paste:
+Then share a venture brief and ask it to run desk research.
+
+## Install as a slash command
+
+This gives you `/thrive-desk-research` in Claude Desktop. Open Terminal and paste:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
