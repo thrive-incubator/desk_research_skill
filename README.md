@@ -9,7 +9,7 @@ Built for ventures at the intersection of **children's mental health and the wor
 
 ## Install
 
-Requires [Claude Desktop](https://claude.ai/download), `git`, and `python3` on your machine.
+Requires [Claude Desktop](https://claude.ai/download) and `python3`. Everything else (`curl`, `unzip`) is already on your Mac.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
@@ -19,8 +19,8 @@ Restart Claude Desktop after installing.
 
 ### What the installer does
 
-- Checks for `git` and `python3`
-- Clones the skill into `~/.claude/skills/thrive-desk-research`
+- Downloads the skill as a zip (no `git` required)
+- Extracts it into `~/.claude/skills/thrive-desk-research`
 - Backs up any existing install
 - Installs `python-docx` (needed for `.docx` export)
 

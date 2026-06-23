@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="https://github.com/thrive-incubator/desk_research_skill.git"
+REPO_URL="https://github.com/thrive-incubator/desk_research_skill/archive/refs/heads/main.zip"
 DEST="$HOME/.claude/skills/thrive-desk-research"
 
 echo "Thrive Desk Research — Installer"
@@ -9,7 +9,8 @@ echo "================================="
 
 # ── Preflight ──────────────────────────────────────────────
 missing=()
-command -v git   >/dev/null 2>&1 || missing+=("git")
+command -v curl    >/dev/null 2>&1 || missing+=("curl")
+command -v unzip   >/dev/null 2>&1 || missing+=("unzip")
 command -v python3 >/dev/null 2>&1 || missing+=("python3")
 
 if [ ${#missing[@]} -gt 0 ]; then
@@ -18,12 +19,18 @@ if [ ${#missing[@]} -gt 0 ]; then
   exit 1
 fi
 
-# ── Clone to a temp dir ────────────────────────────────────
+# ── Download zip ───────────────────────────────────────────
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
-echo "Cloning repo…"
-git clone --depth 1 "$REPO" "$TMPDIR/repo"
+echo "Downloading skill…"
+curl -sSL "$REPO_URL" -o "$TMPDIR/skill.zip"
+
+# ── Extract ────────────────────────────────────────────────
+unzip -q "$TMPDIR/skill.zip" -d "$TMPDIR/extracted"
+
+# The zip extracts into a folder named repo-branchname
+EXTRACTED=$(find "$TMPDIR/extracted" -mindepth 1 -maxdepth 1 -type d | head -1)
 
 # ── Copy into place ────────────────────────────────────────
 if [ -d "$DEST" ]; then
@@ -32,8 +39,8 @@ if [ -d "$DEST" ]; then
 fi
 
 mkdir -p "$DEST"
-cp -R "$TMPDIR/repo/"* "$DEST/"
-cp -R "$TMPDIR/repo/".[!.]* "$DEST/" 2>/dev/null || true   # hidden files
+cp -R "$EXTRACTED/"* "$DEST/"
+cp -R "$EXTRACTED/".[!.]* "$DEST/" 2>/dev/null || true
 
 echo "Installed to $DEST"
 
