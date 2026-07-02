@@ -1,19 +1,10 @@
 ---
 name: thrive-desk-research
 description: >-
-  Run Thrive Studio's Stage 1 desk research on a proposed venture and produce two
-  deliverables: a short 1-2 page decision brief for busy leadership, and a 5-10
-  page in-depth desk research report for the record. Assumes the idea has already
-  passed committee review and is now in desk research. The skill is interactive:
-  it asks a few clarifying questions before researching, runs market sizing,
-  competitive landscape, and user/payor/referrer analysis (grounded in the public
-  record), then asks follow-up questions informed by what the research surfaced,
-  before writing the two docs. Use whenever someone shares a venture idea, concept,
-  or brief to evaluate for Thrive Studio, or asks to "do desk research / Stage 1 /
-  market research" on a children's-mental-health venture, size a market, map
-  competitors, or decide spin-out / spin-in / shutdown. Triggers on "run desk
-  research on this idea", "evaluate this venture", "Stage 1 on X", "size this
-  market", "is there demand for X".
+  Thrive Studio Stage 1 desk research on a venture idea. Asks scope questions, then
+  writes a 1-2 page decision brief and a 5-10 page report on market size,
+  competitors, risks, and studio fit — with a scored gate scorecard, a granular
+  Thrive-alignment sub-score, and a 5-star idea rating, delivered as Markdown and Word.
 user-invocable: true
 ---
 
@@ -56,7 +47,19 @@ finished report — work in three beats, checking in with the user between them.
 
 ### Beat 1 — Ingest the input, then clarify (3–5 questions)
 
-**First, ingest whatever the user gave you.** The expected input is a Thrive Studio
+**If you were invoked with no idea attached yet** — e.g., a non-technical user on
+Claude Desktop just ran `/thrive-desk-research` with nothing else — your *first*
+move is a short, friendly prompt asking them to share the idea: ideally **upload the
+project brief as a file** (PDF, Word doc, or a Google Doc they've exported/downloaded
+to PDF), or paste a few sentences on what it is, for whom, and the core lever. Then
+wait. Don't start researching or interrogating before there's an idea on the table.
+
+**Read any uploaded document in full before doing anything else.** Treat an attached
+file as the brief; extract from it exactly as you would from pasted text (the thesis,
+named entities, studio-fit rationale, and the brief's own "Open questions for Stage
+1"). If the upload is unreadable or empty, say so plainly and ask them to re-share.
+
+**Then ingest whatever the user gave you.** The expected input is a Thrive Studio
 venture brief — typically structured as Summary, The opportunity, What's been
 built, The bet, Why it fits the studio, Tensions, Founder/operator structure,
 Go-to-market, **Open questions for Stage 1**, and a Stage 1 plan. (It may also
@@ -133,27 +136,97 @@ pricing is opaque/quote-based; that absence is itself a finding to test later.
 
 ## The two outputs
 
-Produce **both** docs as Markdown. They serve different readers, so they are not
-the same content at two lengths.
+Produce **both** docs as clean, **Google-Doc-ready Markdown** — the team pastes them
+straight into Google Docs, so they must render cleanly there. They serve different
+readers, so they are not the same content at two lengths. **Write the in-depth report
+first** (it does the thinking), then distill the brief from it — the brief is not a
+teaser for the long doc, it's the decision itself, compressed.
 
-**1. The decision brief — short (1–2 pages).** This is the document most people
-will actually read: busy leadership and gate-committee members who won't get
-through a 10-pager for every idea. It must stand on its own. Lead with the
-recommendation and the few facts that justify it. Follow the short brief template
-below. Keep it skimmable: the go/no-go lean, the 2–3 reasons, the single biggest
-risk, the strongest near-term signal, and the recommended next step. No filler.
+**Deliver each doc in two formats — Markdown and Word (`.docx`).** Markdown stays the
+source of truth (and the Google-Docs paste path); the `.docx` is for readers who want
+a finished Word file. So the run produces four files: the brief as `.md` + `.docx`, and
+the in-depth report as `.md` + `.docx`. Write the Markdown first, then convert each to
+`.docx`:
 
-**2. The in-depth report — full (5–10 pages).** For the record and for the people
-who need the evidence behind the call — the venture owner, the operating leads.
-Follow the in-depth report template below: problem & why-now, public-record
-verification, market sizing, competitive landscape, user/payor/referrer map,
-mission & studio fit, operator priors, answers to the brief's open questions, and
-the go/no-go recommendation with ranked next steps and a categorized source list.
+- **Prefer pandoc** when it's on the machine — it renders the scorecard tables, headings,
+  bold, and links natively: `pandoc brief.md -o brief.docx` (likewise for the report).
+- **If pandoc is missing,** convert with another available tool — e.g. a short script
+  using the `python-docx` library, or a `pypandoc`/LibreOffice (`soffice --convert-to docx`)
+  path — whichever the environment has. Tables are the only tricky part, so verify they
+  survived the conversion.
+- **If no converter is available at all,** say so plainly and deliver the Markdown,
+  telling the user they can paste it into Google Docs (with Markdown detection on) and
+  download as `.docx`. Don't silently skip the Word file.
 
-Write the in-depth report first (it does the thinking), then distill the brief
-from it — the brief is not a teaser for the long doc, it's the decision itself,
-compressed. Always tell the user where the files landed, and give the headline
-recommendation in chat.
+The `★`/`½`/`☆` rating glyphs and the scorecard tables render fine in Word.
+
+**Both docs follow Thrive's standard Desk Research Template** — the same section
+sequence the team uses on paper: Hypothesis → Market Overview → Thrive Mission
+Alignment → Competitor Landscape → User/Payor/Referrer Map → UVP & Unique Advantages →
+Open Questions & Riskiest Assumptions. The brief *is* that template, filled in tight;
+the in-depth report is the same skeleton with each section researched to depth (plus the
+sections the gate committee additionally needs: public-record verification, operator
+priors, and point-by-point answers to the brief's open questions). The templates below
+encode the order — use the headings as written. **Go especially deep on the Competitor
+Landscape and the User/Payor/Referrer Map** — these are the two sections the studio most
+wants from this work, and the two where thin treatment is least acceptable.
+
+**1. The decision brief — a full 1–2 pages.** The document most people actually read:
+busy leadership and gate-committee members. It must stand on its own. Lead with the
+recommendation, then walk the template sections in order, each compressed to its
+load-bearing line(s). Follow the short-brief template below.
+
+**2. The in-depth report — a full 5–10 pages.** For the record and the people who need
+the evidence: the venture owner, the operating leads. Follow the in-depth template
+below — the template sections researched to depth: hypothesis & problem/why-now,
+public-record verification, market overview (TAM/SAM/SOM), **competitive landscape (deep)**,
+**user/payor/referrer map (deep)**, UVP & unique advantages, Thrive mission & studio fit,
+operator priors, answers to the brief's open questions, and the go/no-go with ranked
+next steps and a categorized source list.
+
+### Formatting standard (both docs — make it look right in Google Docs)
+
+Format so the doc looks finished the moment it's pasted into Google Docs (Docs converts
+Markdown on paste when *Automatically detect Markdown* is on — remind the user to enable
+it under **Tools → Preferences**):
+
+- **Real, consistent heading hierarchy.** One `#` H1 title; `##` for top-level sections;
+  `###` for sub-sections. Never skip a level; never fake a heading with bold text.
+- **Open with a one-line *italic* subtitle** under the H1 (what it is + for whom; on the
+  brief, append the recommendation + likely-path line).
+- **Tables for anything comparative** (market sizing, competitors, buyer paths) — they
+  paste as real Docs tables. Keep to **≤6 columns** so they don't overflow the page, and
+  keep cell text short.
+- **Citations stay readable as link text.** Link inline as `[Source name, date](url)` so
+  the visible text is meaningful even when the URL is hidden in Docs. The in-depth report
+  ends with a categorized source list; the brief carries only the few load-bearing ones.
+- **No raw-Markdown cruft in the body.** No `---` horizontal rules between sections (Docs
+  renders them as nothing useful), no stray code fences, no HTML. Short paragraphs and
+  bullets, not walls of text. **Bold sparingly** — the load-bearing claim in a bullet, not
+  whole sentences.
+
+### Length — hit the full range, through evidence not filler
+
+These are the gate committee's expectations; under-writing reads as thin work, and a
+half-page "brief" or a three-page "in-depth report" will not pass.
+
+- **Decision brief: a full 1–2 pages (~500–900 words).** Skimmable in two minutes but
+  complete — it must stand alone without the long report.
+- **In-depth report: a full 5–10 pages (~2,500–5,000 words).** Every template section
+  gets real treatment: several cited data points in problem/why-now; ~5 direct
+  competitors plus adjacents and workarounds; a two-way market sizing with reconciled
+  numbers; and a point-by-point answer to each of the brief's open questions.
+
+Reach length by adding **evidence, competitors, and reasoning depth** — never by padding
+or repetition. If a section is thin, that's a research gap to go fill, not a section to
+skip. The skill's whole value is a skeptical, well-sourced read; filler destroys it.
+
+### Closing
+
+Tell the user where the four files landed (brief `.md`/`.docx`, report `.md`/`.docx`),
+give the headline recommendation **and the star rating** in chat, and remind them they
+can paste the Markdown into Google Docs with Markdown detection on, or open the `.docx`
+directly in Word.
 
 ---
 
@@ -178,6 +251,18 @@ That investment shape implies a different portfolio math from VC. The Studio pla
 Capital recycling is structural. Equity returns from spin-outs are intended to fund the next round of ventures; if too few exits happen or returns are too thin, the model breaks. That's why the equity-and-return work currently in progress — modeling realistic return scenarios across the full pipeline, not just per-venture — is treated as load-bearing rather than nice-to-have.
 
 What Thrive brings to a spin-out beyond capital matters as much as the dollars. The Thrive brand carries Georgetown affiliation, mission credibility, and research access; that brand value continues into the spin-out and is part of why ventures stay close after launch. Spin-outs typically retain a Thrive Center stake, continue paying Thrive for shared resources used post-launch, and operate under governance terms designed to preserve mission alignment. The relationship is closer to a coalition than a clean break.
+
+#### The three advantages Thrive brings to a venture
+
+These are the studio's concrete, hard-to-replicate advantages — the substance behind "what Thrive brings beyond capital." They are the raw material for a venture's **Unique Advantages / UVP** (see the UVP method and template), so weigh which ones are actually load-bearing for the venture in question rather than listing all three by rote.
+
+1. **Access to the people who define the field.** 40+ people who have worked inside specific systems for decades — IECMH consultation, peer support, Head Start and early childhood, family caregiving, disability care. Through them a venture gets warm introductions to the faculty and clinicians who *define* these fields, and to the program providers and frontline workforce it would otherwise spend years trying to reach. This is a distribution and credibility advantage, not just a network.
+
+2. **Access to pilots that lead to learnings and scale.** When a venture enters a health system or school district through Thrive, it enters as a **Georgetown learning partner** — both sides come open to discovering what works, rather than in a vendor/buyer posture. That framing opens doors and pilots that a cold commercial sales motion cannot, and produces learnings that compound toward scale.
+
+3. **Nimble clinical validation that drives commercial viability.** Thrive's research team helps a venture tell a credible story and design the *evidence* that gets payers, providers, districts, and clinical systems to move faster — academic rigor at startup speed. For markets where the buyer needs proof before they'll pay (most of Thrive's), this directly shortens the path to revenue.
+
+When evaluating a venture, treat these as testable claims, not guarantees: does *this* venture's buyer motion actually benefit from field access, a learning-partner pilot, or clinical validation — and if so, which one is decisive? An advantage the venture can't use isn't an advantage.
 
 The annual pipeline targets are concrete: roughly 20–25 ideas vetted at the pre-filter stage, 10–12 advancing to desk research, 4–5 reaching MVP build, and 2 spin-outs per year. Of those four numbers, the first one is the bottleneck — pipeline generation is currently the Studio's single biggest gap, and most of the operational improvement work in 2026 is aimed at sourcing more ideas, both internally from the Thrive Center and externally through partner networks. An EIR (entrepreneur-in-residence) program is being stood up to maintain an active bench of operators ready to lead the validated ventures.
 
@@ -471,6 +556,13 @@ counting only companies that look like the venture, and taking the brief's "no r
 competitor" at face value. The public record almost always shows more than the
 brief admits — "fragmented, not empty" is a common and important finding.
 
+**This is a priority section — go deep.** Along with the User/Payor/Referrer Map, the
+competitive landscape is what the studio most wants from this work, and the section
+where thin treatment fails the gate. Aim past the minimums: a full direct-competitor
+set with real profiles, a genuine sweep of adjacents and workarounds, every findable
+cited price, and a positioning read that names where the venture can credibly stand.
+Surface-level "here are three similar companies" is not acceptable here.
+
 ### Identify ~5 direct competitors
 
 Use web research (sites, pricing pages, reviews, funding/news) to find ~5 primary
@@ -524,6 +616,13 @@ who do you sell to first?** In Thrive's markets the person who uses the product 
 rarely the one who pays for it, and a third party often gatekeeps the sale — so map
 all three roles explicitly before sizing the go-to-market.
 
+**This is a priority section — go deep.** Along with the Competitive Landscape, the
+User/Payor/Referrer map is what the studio most wants from this work. Don't settle for
+naming the three roles in a line each: characterize each with a specific persona,
+work the jobs-to-be-done (especially the *payor's*), map 3–5 real buyer paths with
+their funding mechanisms, and land a defensible answer on the credible first dollar and
+sell-to-first sequence. This section is what makes or breaks the go-to-market read.
+
 ### The three roles
 
 For the venture, identify and characterize each:
@@ -565,6 +664,60 @@ each, and flag the one that is the credible **first dollar**.
 The three-role map, the 3–5 segments with JTBD and pain points, the buyer-path
 table, and a clear answer on the credible first dollar and sell-to-first sequence.
 Flag any segment that needs primary research to confirm (a Stage 3 item).
+
+---
+
+## UVP & Unique Advantages
+
+Adapts the Value Proposition Canvas to the studio's question: **among all the ways
+this problem already gets solved — including "do nothing" — why is *this* approach
+distinct, and is the difference one the buyer actually pays for?** This section is the
+hinge between the competitive landscape (what else exists) and mission/studio fit (why
+Thrive). The template weights it equally with market and competitor work, so treat it
+as a full section, not a closing flourish.
+
+### Pains ↔ pain relievers (Value Proposition Canvas)
+
+State the buyer's real **pains and jobs-to-be-done** (pull these from the
+User/Payor/Referrer map — the *payor's* pains, not only the user's), then map the
+venture's **pain relievers and gain creators** against them one-to-one. The test is
+fit: a pain reliever that doesn't land on a pain the buyer feels is a feature, not
+value. Call out any mismatch plainly — a delightful product aimed at a pain the payor
+doesn't have is a common, fatal pattern.
+
+### The demonstrable difference vs. the next best alternative
+
+Name the **next best alternative** the buyer would actually use (often an adjacent
+tool or a workaround, not a direct competitor) and state the **demonstrable,
+defensible difference** — what this does that the alternative can't, in terms the
+buyer can verify. Vague superiority ("better," "more holistic") is not a
+differentiator; a difference the buyer can see and measure is.
+
+### Outcomes orientation — does the market signal it cares?
+
+Check whether the market actually *rewards* the outcome the venture improves. Look for
+the signal: do buyers in this space pay for outcomes, ask for evidence, write
+outcomes into contracts or grants? If the market doesn't price the outcome, even a
+real improvement may not convert — flag that as a riskiest assumption.
+
+### Unique advantages — including Thrive's
+
+What does the venture have that others don't: **timing, credentials, access, network
+trust, proprietary evidence?** Reason explicitly about **which of Thrive's three
+advantages** (access to the people who define the field; access to learning-partner
+pilots; nimble clinical validation — see the studio context) is *load-bearing* for
+this specific venture, and which is decorative. An advantage only counts if this
+venture's buyer motion can actually use it; say so honestly. Where a claimed advantage
+is really table-stakes that competitors also have, name it as such.
+
+### Output
+
+The pains↔relievers mapping (a short table is fine), the demonstrable difference vs.
+the next best alternative, the outcomes-orientation read, and a ranked list of the
+genuine unique advantages — with the one or two that are actually decisive marked, and
+the load-bearing Thrive advantage named. End with a crisp **UVP statement**:
+"_For [buyer] who [pain/job], [venture] provides [pain reliever] — unlike [next best
+alternative] — because [the defensible difference]._"
 
 ---
 
@@ -663,45 +816,180 @@ is the right register when the record is ambiguous.
 
 ---
 
+## Scorecard, Thrive-Alignment Sub-Score & Star Rating
+
+Both documents carry a lightweight **scoring layer** so the gate committee can see
+the read at a glance. It has three parts: the **four-criteria gate rubric** (scored
+1–3, the headline numbers), a **granular Thrive-alignment sub-score** (the deeper
+drill on fit), and a **five-star idea rating** (the visual gut-check). Score from
+the evidence you actually gathered — every score must be defensible from the body of
+the report, not vibes. When the evidence is thin for a criterion, score
+conservatively and say the score is provisional.
+
+**Scores live with the content, not in a standalone scorecard table.** Each of the
+four criteria maps to a section the report already has, so report each score *inside
+its home section* as a short bold callout — e.g. `**Market Size: 2/3** —
+[one-line justification]` — where the section's evidence backs it up. The only
+scoring summary at the top of the doc is the **star rating plus a one-line recap** of
+the totals (a dashboard, not a duplicate of the per-section reasoning).
+
+### Part 1 — The four-criteria gate rubric (each 1–3)
+
+Score each criterion **1, 2, or 3** against the anchored descriptions below. Use the
+anchor language as written; pick the anchor the evidence best supports, and write a
+one-line justification with the score in its home section.
+
+| # | Criterion | Question | 1 | 2 | 3 |
+|---|-----------|----------|---|---|---|
+| 1 | Market Size | How large is the addressable market for this idea? | Tiny niche (<$10M TAM); not viable as a business | Mid-size market ($10–50M TAM); viable but constrained growth | Large market (>$50M TAM); room for meaningful business scale |
+| 2 | Competitive Position | How differentiated is Thrive's potential offering from existing solutions? | Saturated market with entrenched incumbents; no clear differentiation | Some competitors but identifiable whitespace or unique angle | Clear whitespace or Thrive has a defensible, unique advantage |
+| 3 | Feasibility | How realistically can Thrive build and deliver this within 12–18 months? | Not feasible — requires capabilities, partnerships, or capital we don't have | Feasible with significant effort; some gaps to fill | Highly feasible — fits squarely in Thrive's capability and capacity |
+| 4 | Revenue Potential | How strong is the path to earned revenue at meaningful scale ($1M+ ARR)? | No credible path to earned revenue; grant-dependent | Possible revenue model but speculative; comparable businesses thin | Clear path to $1M+ ARR with credible unit economics and buyer evidence |
+
+**Where each score goes** (its home section in the output):
+
+| Criterion | Home section — in-depth report | Home section — brief |
+|-----------|-------------------------------|----------------------|
+| Market Size | §3 Market Overview | Market Overview |
+| Competitive Position | §4 Competitive Landscape | Competitor Landscape |
+| Feasibility | §7 Thrive Mission Alignment | Thrive Mission Alignment |
+| Revenue Potential | §3 Market Overview (revenue / SOM / where the money comes from) | Market Overview |
+
+**Feasibility sits in the alignment section but is its own gate criterion** — state it
+as a distinct, clearly-labeled line *next to* the Part 2 alignment sub-scorecard, not as
+one of the six alignment sub-categories. It counts toward the **/12 gate score**; it does
+**not** roll into the **/3 alignment average**. Think of it as a seventh line shown
+alongside the alignment table, scored on its own.
+
+Note: there is **no "Potential to Scale Thrive" criterion** — Thrive fit is scored in
+full by the Part 2 sub-score, so it isn't double-counted in this rubric. The headline
+recap carries the **Gate score (sum of the four, x/12)** alongside the star rating.
+
+### Part 2 — Thrive-alignment sub-score (granular, each 1–3)
+
+This sub-score is how the report scores Thrive fit in full — there is **no separate
+"Thrive" line in the four-criteria rubric**, so alignment is captured entirely here.
+Score each of the six characteristics **1–3** using the anchors below, then report
+the **overall as the average (x/3, one decimal)**. This table lives in the Thrive
+Mission Alignment section (brief) / §7 (in-depth), and the overall feeds the headline
+recap.
+
+| # | Alignment characteristic | Question | 1 | 2 | 3 |
+|---|--------------------------|----------|---|---|---|
+| 1 | Mission-domain fit | Does it serve children's mental health and/or the workforce that supports it? | Off-domain — neither children's MH nor the named supporting workforce | Adjacent — touches the domain indirectly, or serves only part of it | Squarely on-domain — directly serves children's MH and/or the named workforce |
+| 2 | Reach / impact multiplication | Can it multiply Thrive's reach and impact? | Marginal or no increase in Thrive's reach/impact | Meaningful but incremental increase | Step-change — credible path to 10x Thrive's reach/impact |
+| 3 | Leverages Thrive's advantages | Does the buyer motion actually use field access / learning-partner pilots / clinical validation? | None of Thrive's three advantages are load-bearing here | One advantage helps at the margin | One or more advantages are decisive to winning the buyer |
+| 4 | Studio posture / economics fit | Does it fit the $3–15M, sustainable, non-VC, lean model? | Requires venture-scale capital / unicorn timeline to work | Fits the band with stretch, or needs an explicit exception | Fits squarely — sustainable $3–15M, bootstrappable/lean, meaningful equity |
+| 5 | Sibling-venture coherence | Does it sit cleanly alongside Attunify / Virtual Consultation / Carepath DSP? | Direct conflict / cannibalization with an existing venture, unresolved | Overlap that needs an internal positioning split before customer-facing work | Clean complement — no harmful overlap, possible shared-services upside |
+| 6 | Counter-mission risk | Could it cut against the mission or create values/reputational tension? | Material counter-mission risk that's hard to mitigate | Some tension; manageable with named guardrails | No meaningful counter-mission risk |
+
+Report it as a table with score + one-line justification per row and the rolled-up overall:
+
+| # | Alignment characteristic | Score (1–3) | Why this score |
+|---|--------------------------|-------------|----------------|
+| 1 | Mission-domain fit | | |
+| 2 | Reach / impact multiplication | | |
+| 3 | Leverages Thrive's advantages | | |
+| 4 | Studio posture / economics fit | | |
+| 5 | Sibling-venture coherence | | |
+| 6 | Counter-mission risk | | |
+| | **Overall alignment** | **/3** | |
+
+### Part 3 — Five-star idea rating (independent holistic judgment)
+
+A single **★ rating out of 5** for the idea, as an easy visual — the same kind of
+output as the headline recommendation, not a formula. Form it as your honest
+overall read; it is **allowed to diverge from the arithmetic** when one fatal flaw
+(or one exceptional strength) outweighs otherwise-average scores. Round to the
+nearest half-star and always print the number so it's unambiguous. Use `★` for full,
+`½` for a half, `☆` for empty, to five positions total (★★★★★ = 5, ★★★½☆ = 3.5,
+★★☆☆☆ = 2, and so on), with a one-line rationale.
+
+This is the **top-of-doc dashboard** — render the star rating on one line with the
+headline recap of the totals, so the reader sees everything at a glance before the
+per-section scores:
+
+> **Idea rating: ★★★½☆ (3.5/5)** · Gate score 8/12 · Thrive alignment 2.3/3
+> _One-line rationale for the rating._
+
+---
+
 # REFERENCE: Output Templates
 
 ## Short Decision Brief Template (1–2 pages)
 
 This is the document most people will read — busy leadership and gate-committee
 members who won't get through the full report for every idea. It must stand on its
-own and be skimmable in two minutes. Lead with the recommendation. Cut anything
-that isn't decision-relevant. Keep it to ~1–2 pages; if it runs to 3, you're
-writing the long report.
+own and be skimmable in two minutes. It **follows Thrive's Desk Research Template
+section order**, with the recommendation pulled to the top because this is a gate
+decision. Aim for a **full 1–2 pages (~500–900 words)** — complete, not a half-page
+stub; if it runs past 2, you're writing the long report.
 
 Keep citations light here (a few for the load-bearing numbers); the full source
-list lives in the in-depth report. Use the headings below as written so the docx
-renders cleanly.
+list lives in the in-depth report. Use the headings below as written so it renders
+cleanly when pasted into Google Docs. Each section is the template's section,
+compressed to its load-bearing line(s) — the Competitor and User/Payor/Referrer
+sections earn a little more room than the rest.
 
 ```
-# Stage 1 Brief: [Venture Name]
-_[One line: what it is, for whom] · Recommendation: [GO / CONDITIONAL GO / HOLD / NO-GO] · Likely path: [spin-out / spin-in / shutdown]_
+# [Venture Name] — Stage 1 Desk Research Brief
+_[Project subheading: what it is, for whom] · Recommendation: [GO / CONDITIONAL GO / HOLD / NO-GO] · Likely path: [spin-out / spin-in / shutdown]_
 
 ## Recommendation
 [2–4 sentences. The call, and the single most important reason for it. If
 conditional, name the one condition that decides it.]
 
-## Why (the 3 things that matter)
-- **[Strongest signal / why-now]:** [one line, with the key number]
-- **[Market & competition read]:** [empty / fragmented / crowded — one line]
-- **[The biggest risk]:** [the assumption that, if wrong, kills it]
+## Scorecard
+**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
+_[one-line rationale for the rating; holistic, not a formula]_
+[Per-criterion scores sit in their home sections below: Market Size & Revenue Potential in Market Overview, Competitive Position in Competitor Landscape, Feasibility in Thrive Mission Alignment.]
 
-## Market & buyer at a glance
+## The Hypothesis
+_If we provide [X], then [buyer] will [measurable outcome]._
+[One line: the burning problem and the measurable change being created.]
+
+## Market Overview
+**Market Size: [x]/3** · **Revenue Potential: [x]/3** — [one line each, justified by the read below]
 - **Size:** TAM ~[x] / SAM ~[x] / SOM ~[x] ([confidence])
-- **Who pays:** [the credible first dollar — channel + named buyer in motion if any]
-- **Price anchor:** [the nearest real benchmark, or "opaque — Stage-2 gap"]
+- **Where the money comes from:** [grants / org budgets / individual spend / government]
+- **Demand temperature:** [who is desperately looking for this vs. mildly interested]
 
-## Mission & studio fit
-[One or two lines: on-mission? fits the $3–15M sustainable, non-VC posture? any
-tension (capital model, sibling-venture overlap) that needs an internal call.]
+## Competitor Landscape
+**Competitive Position: [x]/3** — [one line, justified by the read below]
+- **Direct:** [who is already selling this — the 2–3 that matter most]
+- **Adjacent / workarounds:** [partial solutions; spreadsheets, group texts, informal processes]
+- **"Do nothing":** [where inertia sits — is the pain acute enough to act?]
 
-## Biggest open question / what we'd test next
-[The one highest-leverage, cheapest thing to settle next, and what answer would
-change the recommendation. Point to the in-depth report for the rest.]
+## User / Payor / Referrer Map
+- **User:** [who uses it day-to-day]
+- **Payor:** [who controls the budget and signs the check]
+- **Referrer:** [who recommends or routes buyers]
+- **First dollar:** [if these differ — who you sell to first, and the proven funding mechanism]
+
+## UVP & Unique Advantages
+[One or two lines: why this approach is distinct vs. the next best alternative, and
+which Thrive advantage (field access / learning-partner pilots / clinical validation)
+is load-bearing here.]
+
+## Thrive Mission Alignment
+[One or two lines: on-mission? fits the $3–15M sustainable, non-VC posture? any tension
+(capital model, sibling-venture overlap, counter-mission risk) that needs an internal call.]
+
+| # | Alignment characteristic | Score (1–3) | Why |
+|---|--------------------------|-------------|-----|
+| 1 | Mission-domain fit | | [one line] |
+| 2 | Reach / impact multiplication | | [one line] |
+| 3 | Leverages Thrive's advantages | | [one line] |
+| 4 | Studio posture / economics fit | | [one line] |
+| 5 | Sibling-venture coherence | | [one line] |
+| 6 | Counter-mission risk | | [one line] |
+| | **Overall alignment** | **/3** | |
+
+**Feasibility (gate criterion — separate from the alignment average above): [x]/3** — [can Thrive build & deliver this in 12–18 months? counts toward the /12 gate score, not the /3 alignment overall]
+
+## Open Questions & Riskiest Assumptions
+[The top 1–3 assumptions that, if wrong, kill this — and the single highest-leverage,
+cheapest thing to test next. Point to the in-depth report for the rest.]
 ```
 
 ---
@@ -709,22 +997,36 @@ change the recommendation. Point to the in-depth report for the rest.]
 ## In-Depth Report Template (5–10 pages)
 
 For the record and for the people who need the evidence behind the call — the
-venture owner and the operating leads. Lead with prose and evidence; keep
-citations inline as Markdown links; use the tables shown. Skeptical and
-analytical, not promotional. Use these headings as written. Target ~5–10 pages.
+venture owner and the operating leads. It is **Thrive's Desk Research Template with
+every section researched to depth**, plus the gate-committee sections the template
+doesn't carry (public-record verification, operator priors, answers to the brief's
+open questions). Lead with prose and evidence; keep citations inline as readable
+`[Source, date](url)` links; use the tables shown. Skeptical and analytical, not
+promotional. Use these headings as written so it pastes cleanly into Google Docs.
+Target a **full 5–10 pages (~2,500–5,000 words)** — give every section real treatment;
+thinness reads as incomplete work. **§4 Competitor Landscape and §5 User/Payor/Referrer
+Map are the priority sections — they should be the most substantial in the report.**
 
 ```
 # Stage 1 Desk Research: [Venture Name]
-_[One-line venture descriptor — what it is and for whom]_
+_[Project subheading — what it is and for whom]_
 
 ## Executive Summary
 [The verdict on one screen, punchline first: the why-now moment; the
-evidence/credibility read; the competitive read; the 1–2 things that most need
-de-risking; the strongest near-term anchor; the operator read if relevant; and the
-headline recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) and likely path
+evidence/credibility read; the competitive read; the who-pays/first-dollar read; the
+1–2 things that most need de-risking; the operator read if relevant; and the headline
+recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) and likely path
 (spin-out / spin-in / shutdown).]
 
-## 1. The Problem & Why Now
+## Scorecard
+**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
+_[one-line rationale; holistic judgment, allowed to diverge from the arithmetic]_
+[Per-criterion scores are reported in their home sections: Market Size & Revenue Potential in §3, Competitive Position in §4, Feasibility in §7 (alongside the alignment table, as its own gate criterion). The 6-part Thrive-alignment breakdown is also in §7.]
+
+## 1. The Hypothesis & Why Now
+### The hypothesis (If/Then)
+_If we provide [X], then [buyer] will [measurable outcome]._ [Who is the buyer, what is
+the burning problem, the measurable change.]
 ### The problem (current data)
 [Prevalence/scale of the problem, cited and dated.]
 ### Cost of inaction (the buyer's frame)
@@ -738,54 +1040,96 @@ headline recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) and likely path
 [Verify the venture's claims about itself and its world: originating program/lab and
 real footprint, named evidence base, brand/naming risks, brief-vs-record gaps.]
 
-## 3. Market Sizing
+## 3. Market Overview (TAM / SAM / SOM)
+**Market Size: [x]/3** · **Revenue Potential: [x]/3** — [one line each, scored from the sizing and revenue read in this section]
 | Layer | Size | Basis | Confidence |
 |-------|------|-------|-----------|
 | TAM | | top-down [source] | |
 | SAM | | filters | |
 | SOM (1–3 yr) | | bottom-up: customers × price × frequency | |
-[Reconcile top-down vs. bottom-up; growth drivers; honest about estimates.]
+[Reconcile top-down vs. bottom-up; growth drivers; where the money comes from
+(grants / org budgets / individual spend / government); segment demand by behavior —
+who is desperately looking vs. mildly interested. Honest about estimates.]
 
 ## 4. Competitive Landscape
-### Direct competitors (identify ~5)
+**Competitive Position: [x]/3** — [one line, justified by the landscape below]
+### Direct competitors (identify ~5, profile each)
 | Org | Model | Scale | Pricing posture | Strength | Weakness |
 |-----|-------|-------|-----------------|----------|----------|
-### Adjacent players
+### Adjacent solutions
 | Org | Funding | Reach | Pricing | Notes (incl. any strain) |
 |-----|---------|-------|---------|--------------------------|
 ### Workarounds & "do nothing"
-[The real incumbent — free tools, status quo, inertia.]
+[The real incumbent — spreadsheets, group texts, free tools, status quo, inertia.
+Where does "do nothing" sit on the spectrum — is the pain acute enough to act?]
 ### Pricing benchmarks
-[What's findable, cited. Flag opaque/quote-based pricing as a Stage 2 gap.]
+[Every findable, cited, dated price point. Flag opaque/quote-based pricing as a Stage 2 gap.]
 ### White space & positioning
-[Where no one serves the buyer well; where the venture could credibly stand.]
+[Where no one serves the buyer well; where the venture could credibly stand; the
+12–18 month threats to monitor.]
 
 ## 5. User / Payor / Referrer Map
-- **User (day-to-day):** [who uses it]
-- **Payor (writes the check):** [who pays, by channel + proven funding mechanism]
-- **Referrer (recommends/gatekeeps):** [who routes buyers]
-- **Buyer paths & first dollar:** [the credible first dollar; who to sell to first]
+### The three roles
+- **User (day-to-day):** [specific persona, not "users"]
+- **Payor (writes the check):** [who controls the budget, by channel]
+- **Referrer / gatekeeper:** [who recommends, routes, or must approve the sale]
+- **Same or different?** [if different — who you sell to first, and why]
+### Jobs-to-be-Done per role
+[The user's job and the payor's job (budget / mandate / risk / reporting) — these differ.]
+### Segments & buyer paths (3–5)
+| Channel | Who writes the check | Proven funding mechanism | Named buyer in motion? | Read |
+|---------|----------------------|--------------------------|------------------------|------|
+### First dollar & sell-to-first
+[The credible first dollar, the sequence, and any segment needing Stage 3 primary research.]
 
-## 6. Mission & Studio Fit
+## 6. UVP & Unique Advantages
+### Pains ↔ pain relievers (Value Proposition Canvas)
+| Buyer pain / job | Venture's pain reliever / gain | Fit? |
+|------------------|-------------------------------|------|
+### Demonstrable difference vs. the next best alternative
+[What this does that the alternative can't, in terms the buyer can verify.]
+### Outcomes orientation & unique advantages
+[Does the market reward the outcome? Which of Thrive's three advantages (field access /
+learning-partner pilots / clinical validation) is load-bearing here — and which is
+decorative?]
+**UVP statement:** _For [buyer] who [pain], [venture] provides [reliever] — unlike [next
+best alternative] — because [defensible difference]._
+
+## 7. Thrive Mission Alignment & Studio Fit
 **How it scales the mission:** [serves children's MH + the supporting workforce?]
+**Where it could go counter to the mission:** [populations/approaches/partnerships that create tension; what must be true to stay in bounds]
 **Fit with the $3–15M sustainable, non-VC posture:** [does the model fit, or need a venture-scale exception?]
 **Capital / outcome lean:** [spin-out vs spin-in vs shutdown, and why]
 **Sibling-venture positioning:** [overlap with Attunify or others to settle internally]
 **Stays at the university vs. spins out:** [research/IP/credibility vs. ops/GTM]
+
+### Thrive-alignment sub-score (this is how Thrive fit is scored — no separate gate criterion)
+| # | Alignment characteristic | Score (1–3) | Why this score |
+|---|--------------------------|-------------|----------------|
+| 1 | Mission-domain fit | | |
+| 2 | Reach / impact multiplication | | |
+| 3 | Leverages Thrive's advantages | | |
+| 4 | Studio posture / economics fit | | |
+| 5 | Sibling-venture coherence | | |
+| 6 | Counter-mission risk | | |
+| | **Overall alignment** | **/3** | |
+
+**Feasibility (gate criterion — separate from the alignment average above): [x]/3** — [can Thrive build & deliver this in 12–18 months, given capability/capacity? counts toward the /12 gate score, not the /3 alignment overall]
+
 **Verdict:** [fits / fits with guardrails / needs internal resolution / misaligned]
 
-## 7. Operator Priors
+## 8. Operator Priors
 [If an operator/idea-bringer is named: light public-record triangulation + a "Read"
 on fit + the one thing to test. If none named: the operator profile the venture needs.]
 
-## 8. Answers to the Brief's Open Questions
+## 9. Answers to the Brief's Open Questions
 [Address each Stage-1 open question from the brief in order: best current answer,
 the evidence, and what's left for Stage 2.]
 
-## 9. Recommendation (Go / No-Go)
+## 10. Recommendation & Riskiest Assumptions (Go / No-Go)
 ### Signals supporting GO
 1. ...
-### Yellow flags (ranked by how fast the venture dies if true)
+### Yellow flags / riskiest assumptions (ranked by how fast the venture dies if true)
 1. ...
 ### Recommended next steps (in execution order)
 1. [highest-leverage, cheapest test first]
