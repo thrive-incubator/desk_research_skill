@@ -20,68 +20,59 @@ Search; v1 deliberately works only from the public record + what you tell it.
 
 ## What you need (quick checklist)
 
-- A Claude plan with **Skills** (Pro, Max, Team, or Enterprise — or Claude Code).
-- On Claude Desktop / Claude.ai: **Code execution & file creation** turned on (it gates
-  the Skills feature *and* lets the skill read the brief you upload) and **Web search**
-  turned on (for cited sources). The walkthrough below turns both on — step by step.
+- **Team or Enterprise plan** to provision it once for the whole org (the recommended
+  path below). Individuals on Pro/Max can install it just for themselves; builders can
+  use Claude Code.
+- **Code execution & file creation** and **Web search** turned on — code execution
+  unlocks Skills *and* lets the skill read the brief you upload; web search powers the
+  cited sources. On Enterprise/Team an **Owner** turns these on centrally (below);
+  individuals turn them on in their own **Settings → Capabilities**.
 - Nothing to install locally: no Python, no packages.
 
 ---
 
 ## Install & setup
 
-> **Why two sets of steps?** Claude Desktop / Claude.ai install skills by **uploading a
-> zip** in Settings; Claude Code reads them from a folder on disk. Most of the team is
-> on Desktop — use **Option A**. Builders use **Option B**.
+**Recommended for the team (Enterprise / Team): provision it once, org-wide.** An
+organization **Owner** adds the skill in organization settings; it then appears for
+**every member automatically** — no per-person upload, no restart. Everyone else does
+nothing.
 
-### Option A — Claude Desktop / Claude.ai (the team · ~5 min, one time)
+### A. Provision org-wide — Owner, one time (~2 min)
 
-Do this once. After it, using the skill is just `/thrive-desk-research` + uploading a
-document. Follow the steps in order — step 2 is what most often gets missed.
+1. **Get the skill zip.** Grab **`thrive-desk-research.zip`** from the repo's **`dist/`**
+   folder (or build a fresh one — see *Packaging a fresh zip* below). It must contain
+   **`SKILL.md`**. Leave it zipped.
+2. **Open Organization settings → Skills.** Owners only — members don't see this screen.
+3. **Turn on *Code execution and file creation* and *Skills*** (both toggles, in that
+   Skills area). Skills require code execution to run, so this is mandatory.
+4. **Add the skill.** Under **Organization skills**, click **+ Add** and upload
+   `thrive-desk-research.zip`.
+5. **Done.** It's provisioned to everyone immediately — enabled by default, no restart.
+   Only Owners can add or remove org-wide skills. To scope it to *some* people instead
+   of the whole org, bundle it into a plugin and assign that plugin to a group.
 
-1. **Open Settings.** In Claude Desktop, click your name/initials in the **bottom-left
-   corner → Settings**. (On claude.ai it's the same menu in the top-right.)
-2. **Turn on Code execution & file creation.** In Settings, open **Capabilities**.
-   Switch **Code execution & file creation** to **On**. This does two things: it
-   *unlocks the Skills feature* (without it, the Skills screen in step 6 won't even
-   appear), and it lets the skill *open the brief you upload*. Required even though the
-   skill itself writes no code.
-3. **Turn on Web search.** In that same **Capabilities** area, switch **Web search** to
-   **On**. The report's credibility comes from live, cited sources, so this is needed.
-4. **(Team / Enterprise workspaces only.)** If you're on a shared Team or Enterprise
-   workspace and there's no Skills section, ask a workspace **Owner** to enable
-   **Skills** for the workspace first. Personal / Pro / Max accounts skip this step.
-5. **Download the skill file.** Get **`thrive-desk-research.zip`** from the repo's
-   **`dist/`** folder (or ask Hisham). **Leave it zipped — do not unzip it.**
-6. **Upload it.** Settings → **Capabilities → Skills** (some builds call this
-   **Customize → Skills**) → click **Upload skill** → choose `thrive-desk-research.zip`
-   → make sure its toggle is switched **On**.
-7. **Restart Claude.** Fully **quit and reopen** the Desktop app — skills show up in the
-   `/` menu only after a restart.
-8. **Confirm it's there.** Open a new chat, type **`/`**, and check that
-   **thrive-desk-research** appears in the list. That's it — you're set up.
+### B. What members do — essentially nothing
 
-> **If something's off:** labels vary slightly by build — look under **Capabilities**,
-> **Customize**, or **Features** in Settings. If `/thrive-desk-research` doesn't appear
-> after a restart, 9 times out of 10 it's step 2 (Code execution still off) or the
-> skill's toggle being off in step 6.
+The skill is **on by default** for all members. Each person finds it under **Customize →
+Skills** (in the **Organization skills** section, marked as owner-provisioned) and can
+toggle it off if they choose. To use it: start a new chat, type **`/`**, and pick
+**thrive-desk-research** — or just ask in plain language. Make sure **Web search** is on
+so it can cite sources (Owners can enable this centrally too).
 
-### Option B — Claude Code (builders / Hisham)
+### Alternatives (if you're not provisioning org-wide)
 
-One-liner (clones `SKILL.md` into your Claude Code skills dir):
-
-```bash
-curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
-```
-
-Or copy the folder manually:
-
-```bash
-cp -R thrive-desk-research ~/.claude/skills/thrive-desk-research   # SKILL.md at its root
-```
-
-Restart Claude Code. It's then invocable as **`/thrive-desk-research`**, and also
-auto-loads when a request matches its description.
+- **Individual upload (Pro / Max, or a single Desktop user).** In your own **Settings →
+  Capabilities**, turn on **Code execution & file creation** and **Web search**, then
+  **Skills → Upload skill → `thrive-desk-research.zip`**, switch its toggle **On**, and
+  **restart** Claude. Confirm with `/thrive-desk-research` in a new chat. (If the Skills
+  section is missing, Code execution is still off — that's what gates it.)
+- **Claude Code (builders).** One-liner:
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/thrive-incubator/desk_research_skill/main/install.sh | bash
+  ```
+  or copy the folder: `cp -R thrive-desk-research ~/.claude/skills/thrive-desk-research`.
+  Restart Claude Code; invoke with `/thrive-desk-research` or plain language.
 
 ---
 
