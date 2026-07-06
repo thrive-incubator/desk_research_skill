@@ -4,7 +4,8 @@ description: >-
   Thrive Studio Stage 1 desk research on a venture idea. Asks scope questions, then
   writes a 1-2 page decision brief and a 5-10 page report on market size,
   competitors, risks, and studio fit — with a scored gate scorecard, a granular
-  Thrive-alignment sub-score, and a 5-star idea rating, delivered as Markdown and Word.
+  Thrive-alignment sub-score, and a 5-axis gate-rating radar chart, delivered as
+  Markdown and Word.
 user-invocable: true
 ---
 
@@ -158,7 +159,22 @@ the in-depth report as `.md` + `.docx`. Write the Markdown first, then convert e
   telling the user they can paste it into Google Docs (with Markdown detection on) and
   download as `.docx`. Don't silently skip the Word file.
 
-The `★`/`½`/`☆` rating glyphs and the scorecard tables render fine in Word.
+**Generate the gate-rating radar chart once, as a PNG, before writing the Scorecard
+section** (see Part 3 below) — both docs embed the *same* image. Reference it with a
+normal Markdown image tag, e.g. `![Gate rating radar chart](gate-rating-radar.png)`,
+placed directly under the `## Scorecard` heading in both files:
+
+- **In the `.docx` files,** pandoc/`python-docx` embeds the PNG automatically as long
+  as it's saved next to the `.md` file (or you pass its path) when you run the
+  conversion — verify the image actually landed in the converted file, the same way
+  you verify tables survived.
+- **In the pasted-into-Google-Docs path,** a local image path won't fetch on paste —
+  Google's Markdown-paste only converts headings/tables/bold/links, not images. Flag
+  this to the user explicitly: after pasting, they'll need to **Insert → Image →
+  Upload** the PNG themselves where the placeholder sits, or just use the `.docx`
+  (already has it) if they want zero manual steps. Don't silently drop the chart.
+
+The scorecard tables render fine in Word either way.
 
 **Both docs follow Thrive's standard Desk Research Template** — the same section
 sequence the team uses on paper: Hypothesis → Market Overview → Thrive Mission
@@ -224,9 +240,10 @@ skip. The skill's whole value is a skeptical, well-sourced read; filler destroys
 ### Closing
 
 Tell the user where the four files landed (brief `.md`/`.docx`, report `.md`/`.docx`),
-give the headline recommendation **and the star rating** in chat, and remind them they
-can paste the Markdown into Google Docs with Markdown detection on, or open the `.docx`
-directly in Word.
+give the headline recommendation **and the gate-rating radar chart** in chat (share
+the PNG plus the gate score / alignment recap), and remind them they can paste the
+Markdown into Google Docs with Markdown detection on, or open the `.docx` directly in
+Word — and that a pasted-in Google Doc needs the chart image inserted manually.
 
 ---
 
@@ -816,21 +833,22 @@ is the right register when the record is ambiguous.
 
 ---
 
-## Scorecard, Thrive-Alignment Sub-Score & Star Rating
+## Scorecard, Thrive-Alignment Sub-Score & Gate-Rating Radar Chart
 
 Both documents carry a lightweight **scoring layer** so the gate committee can see
 the read at a glance. It has three parts: the **four-criteria gate rubric** (scored
 1–3, the headline numbers), a **granular Thrive-alignment sub-score** (the deeper
-drill on fit), and a **five-star idea rating** (the visual gut-check). Score from
-the evidence you actually gathered — every score must be defensible from the body of
-the report, not vibes. When the evidence is thin for a criterion, score
-conservatively and say the score is provisional.
+drill on fit, rolled up to one overall number), and a **five-axis gate-rating radar
+chart** (the visual gut-check — the four gate criteria plus the overall alignment
+score, plotted together). Score from the evidence you actually gathered — every
+score must be defensible from the body of the report, not vibes. When the evidence
+is thin for a criterion, score conservatively and say the score is provisional.
 
 **Scores live with the content, not in a standalone scorecard table.** Each of the
 four criteria maps to a section the report already has, so report each score *inside
 its home section* as a short bold callout — e.g. `**Market Size: 2/3** —
 [one-line justification]` — where the section's evidence backs it up. The only
-scoring summary at the top of the doc is the **star rating plus a one-line recap** of
+scoring summary at the top of the doc is the **radar chart plus a one-line recap** of
 the totals (a dashboard, not a duplicate of the per-section reasoning).
 
 ### Part 1 — The four-criteria gate rubric (each 1–3)
@@ -862,8 +880,9 @@ one of the six alignment sub-categories. It counts toward the **/12 gate score**
 alongside the alignment table, scored on its own.
 
 Note: there is **no "Potential to Scale Thrive" criterion** — Thrive fit is scored in
-full by the Part 2 sub-score, so it isn't double-counted in this rubric. The headline
-recap carries the **Gate score (sum of the four, x/12)** alongside the star rating.
+full by the Part 2 sub-score, so it isn't double-counted in this rubric. All four
+scores also become axes of the Part 3 radar chart, and the headline recap carries the
+**Gate score (sum of the four, x/12)** alongside it.
 
 ### Part 2 — Thrive-alignment sub-score (granular, each 1–3)
 
@@ -871,8 +890,8 @@ This sub-score is how the report scores Thrive fit in full — there is **no sep
 "Thrive" line in the four-criteria rubric**, so alignment is captured entirely here.
 Score each of the six characteristics **1–3** using the anchors below, then report
 the **overall as the average (x/3, one decimal)**. This table lives in the Thrive
-Mission Alignment section (brief) / §7 (in-depth), and the overall feeds the headline
-recap.
+Mission Alignment section (brief) / §7 (in-depth), and the overall feeds both the
+headline recap and the fifth axis of the Part 3 radar chart.
 
 | # | Alignment characteristic | Question | 1 | 2 | 3 |
 |---|--------------------------|----------|---|---|---|
@@ -895,22 +914,71 @@ Report it as a table with score + one-line justification per row and the rolled-
 | 6 | Counter-mission risk | | |
 | | **Overall alignment** | **/3** | |
 
-### Part 3 — Five-star idea rating (independent holistic judgment)
+### Part 3 — Gate-rating radar chart (five axes, plotted from the scores above)
 
-A single **★ rating out of 5** for the idea, as an easy visual — the same kind of
-output as the headline recommendation, not a formula. Form it as your honest
-overall read; it is **allowed to diverge from the arithmetic** when one fatal flaw
-(or one exceptional strength) outweighs otherwise-average scores. Round to the
-nearest half-star and always print the number so it's unambiguous. Use `★` for full,
-`½` for a half, `☆` for empty, to five positions total (★★★★★ = 5, ★★★½☆ = 3.5,
-★★☆☆☆ = 2, and so on), with a one-line rationale.
+Plot the **four gate-rubric criteria plus the overall Thrive-alignment score** on one
+five-axis radar (spider) chart — the visual gut-check that replaces the old star
+rating. Unlike the star rating, this isn't an independent judgment call — it's a
+direct plot of scores you already computed in Parts 1 and 2, so there's nothing new
+to decide here beyond laying it out clearly:
 
-This is the **top-of-doc dashboard** — render the star rating on one line with the
-headline recap of the totals, so the reader sees everything at a glance before the
-per-section scores:
+| Axis | Score | Source |
+|------|-------|--------|
+| Market Size | x/3 | Part 1 — Market Overview (§3 / in-depth; Market Overview / brief) |
+| Competitive Position | x/3 | Part 1 — Competitor Landscape (§4 / in-depth; Competitor Landscape / brief) |
+| Feasibility | x/3 | Part 1 — Thrive Mission Alignment (§7 / in-depth; Thrive Mission Alignment / brief) |
+| Revenue Potential | x/3 | Part 1 — Market Overview (§3 / in-depth; Market Overview / brief) |
+| Thrive Alignment (overall) | x.x/3 | Part 2 overall — Thrive Mission Alignment (§7 / in-depth; Thrive Mission Alignment / brief) |
 
-> **Idea rating: ★★★½☆ (3.5/5)** · Gate score 8/12 · Thrive alignment 2.3/3
-> _One-line rationale for the rating._
+All five axes share the **same 1–3 scale**, which is what makes them comparable on
+one chart. A text/glyph rendering can't show five axes at once, so this one has to be
+a generated image:
+
+- Five evenly spaced spokes, one per row above, with gridlines at 1, 2, and 3.
+- A single closed polygon connecting the five values, lightly filled.
+- Each axis labeled with **both its name and its score** (e.g. `Market Size (3/3)`)
+  so the reader isn't left estimating position against the gridlines.
+- One consistent color per venture across the brief and the in-depth report; a plain
+  white background so it reproduces cleanly in print and in Word.
+
+Matplotlib's polar-axes projection is the simplest path if it's available in the
+execution environment (the same environment already used for the `.docx` conversion):
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+labels = ["Market Size", "Competitive Position", "Feasibility",
+          "Revenue Potential", "Thrive Alignment"]
+scores = [3, 2, 2, 1, 2.3]  # replace with this venture's actual scores, 1-3 scale
+
+angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+values = scores + scores[:1]
+angles += angles[:1]
+
+fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))
+ax.plot(angles, values, linewidth=2, color="#2E5EAA")
+ax.fill(angles, values, color="#2E5EAA", alpha=0.25)
+ax.set_ylim(0, 3)
+ax.set_yticks([1, 2, 3])
+ax.set_xticks(angles[:-1])
+ax.set_xticklabels([f"{l}\n({s}/3)" for l, s in zip(labels, scores)])
+fig.savefig("gate-rating-radar.png", dpi=200, bbox_inches="tight", facecolor="white")
+```
+
+If matplotlib (or an equivalent plotting tool) isn't available in the environment,
+say so plainly and fall back to the table above plus the text recap below — don't
+fabricate an image or silently drop the visual.
+
+**Save one PNG per venture** (e.g. `gate-rating-radar.png`) and embed the same image
+in both docs — see the embedding and Google-Docs-paste guidance above. This is the
+**top-of-doc dashboard** — place it right under the `## Scorecard` heading, above the
+per-criterion detail, so the reader sees everything at a glance:
+
+> ![Gate rating radar chart](gate-rating-radar.png)
+> **Gate score 8/12 · Thrive alignment 2.3/3**
+> _One-line takeaway — what the shape reveals (e.g. strong feasibility and alignment
+> offsetting thin revenue potential), not a separate score._
 
 ---
 
@@ -940,9 +1008,10 @@ _[Project subheading: what it is, for whom] · Recommendation: [GO / CONDITIONAL
 conditional, name the one condition that decides it.]
 
 ## Scorecard
-**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
-_[one-line rationale for the rating; holistic, not a formula]_
-[Per-criterion scores sit in their home sections below: Market Size & Revenue Potential in Market Overview, Competitive Position in Competitor Landscape, Feasibility in Thrive Mission Alignment.]
+![Gate rating radar chart](gate-rating-radar.png)
+**Gate score [x]/12 · Thrive alignment [x.x]/3**
+_[one-line takeaway — what the shape reveals, not a separate score]_
+[Per-criterion scores sit in their home sections below: Market Size & Revenue Potential in Market Overview, Competitive Position in Competitor Landscape, Feasibility in Thrive Mission Alignment. Chart axes (all 1–3 scale): Market Size, Competitive Position, Feasibility, Revenue Potential, Thrive Alignment (overall).]
 
 ## The Hypothesis
 _If we provide [X], then [buyer] will [measurable outcome]._
@@ -1019,9 +1088,10 @@ recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) and likely path
 (spin-out / spin-in / shutdown).]
 
 ## Scorecard
-**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
-_[one-line rationale; holistic judgment, allowed to diverge from the arithmetic]_
-[Per-criterion scores are reported in their home sections: Market Size & Revenue Potential in §3, Competitive Position in §4, Feasibility in §7 (alongside the alignment table, as its own gate criterion). The 6-part Thrive-alignment breakdown is also in §7.]
+![Gate rating radar chart](gate-rating-radar.png)
+**Gate score [x]/12 · Thrive alignment [x.x]/3**
+_[one-line takeaway — what the shape reveals, not a separate score]_
+[Per-criterion scores are reported in their home sections: Market Size & Revenue Potential in §3, Competitive Position in §4, Feasibility in §7 (alongside the alignment table, as its own gate criterion). The 6-part Thrive-alignment breakdown is also in §7. Chart axes (all 1–3 scale): Market Size, Competitive Position, Feasibility, Revenue Potential, Thrive Alignment (overall).]
 
 ## 1. The Hypothesis & Why Now
 ### The hypothesis (If/Then)
