@@ -4,7 +4,8 @@ description: >-
   Thrive Studio Stage 1 desk research on a venture idea. Asks scope questions, then
   writes a 1-2 page decision brief and a 5-10 page report on market size,
   competitors, risks, and studio fit — with a scored gate scorecard, a granular
-  Thrive-alignment sub-score, and a 5-star idea rating, delivered as Markdown and Word.
+  Thrive-alignment sub-score, and a 5-axis gate-rating radar chart, delivered as
+  Markdown and Word.
 user-invocable: true
 ---
 
@@ -148,17 +149,47 @@ a finished Word file. So the run produces four files: the brief as `.md` + `.doc
 the in-depth report as `.md` + `.docx`. Write the Markdown first, then convert each to
 `.docx`:
 
-- **Prefer pandoc** when it's on the machine — it renders the scorecard tables, headings,
-  bold, and links natively: `pandoc brief.md -o brief.docx` (likewise for the report).
+- **Prefer pandoc** when it's on the machine — it renders headings, bold, bullet lists,
+  and links natively: `pandoc brief.md -o brief.docx` (likewise for the report). If
+  pandoc isn't on `PATH`, the `pypandoc_binary` pip package bundles its own pandoc
+  (`pip install pypandoc_binary`, then `pypandoc.convert_file(md, "docx", outputfile=…,
+  extra_args=["--resource-path=."])`) — a reliable no-system-install path.
 - **If pandoc is missing,** convert with another available tool — e.g. a short script
-  using the `python-docx` library, or a `pypandoc`/LibreOffice (`soffice --convert-to docx`)
-  path — whichever the environment has. Tables are the only tricky part, so verify they
-  survived the conversion.
+  using the `python-docx` library, or a LibreOffice (`soffice --convert-to docx`) path —
+  whichever the environment has.
 - **If no converter is available at all,** say so plainly and deliver the Markdown,
   telling the user they can paste it into Google Docs (with Markdown detection on) and
   download as `.docx`. Don't silently skip the Word file.
 
-The `★`/`½`/`☆` rating glyphs and the scorecard tables render fine in Word.
+**Do not use tables in the output docs — use prose and bulleted lists instead.**
+Multi-column free-text tables (competitors, buyer paths, alignment breakdowns) render
+badly once the doc leaves this environment: Word and especially Google Docs collapse the
+narrow columns so cell text stacks one or two characters per line ("Pri / cin / g …").
+Word column widths can't be controlled reliably across both apps, so the fix is to not
+depend on columns at all. Present every comparative breakdown as a **bold-led bulleted
+list** — one bullet per item, the entity name in bold, the former columns folded into a
+short sentence with inline labels (e.g. *Strength:* … *Weakness:* …). This reads
+cleanly everywhere and is the format the section templates below already specify. If you
+ever do emit a table, keep it to a genuinely narrow 2–3 columns of *short* values only.
+
+**Generate the gate-rating radar chart once, as a PNG, before writing the Scorecard
+section** (see Part 3 below) — both docs embed the *same* image. Reference it with a
+normal Markdown image tag, e.g. `![Gate rating radar chart](gate-rating-radar.png)`,
+placed directly under the `## Scorecard` heading in both files:
+
+- **In the `.docx` files,** pandoc/`python-docx` embeds the PNG automatically as long
+  as it's saved next to the `.md` file (pass `--resource-path=.` to pandoc, or the
+  image's path) when you run the conversion — verify the image actually landed in the
+  converted file.
+- **In the pasted-into-Google-Docs path,** a local image path won't fetch on paste —
+  Google's Markdown-paste only converts headings/tables/bold/links, not images. Flag
+  this to the user explicitly: after pasting, they'll need to **Insert → Image →
+  Upload** the PNG themselves where the placeholder sits, or just use the `.docx`
+  (already has it) if they want zero manual steps. Don't silently drop the chart.
+
+With comparative breakdowns written as bulleted lists (not tables), the scorecard
+content renders cleanly in Word and Google Docs alike — verify no stray pipe-tables
+slipped into either doc before delivering.
 
 **Both docs follow Thrive's standard Desk Research Template** — the same section
 sequence the team uses on paper: Hypothesis → Market Overview → Thrive Mission
@@ -194,9 +225,11 @@ it under **Tools → Preferences**):
   `###` for sub-sections. Never skip a level; never fake a heading with bold text.
 - **Open with a one-line *italic* subtitle** under the H1 (what it is + for whom; on the
   brief, append the recommendation + likely-path line).
-- **Tables for anything comparative** (market sizing, competitors, buyer paths) — they
-  paste as real Docs tables. Keep to **≤6 columns** so they don't overflow the page, and
-  keep cell text short.
+- **Prose and bulleted lists for anything comparative** (market sizing, competitors,
+  buyer paths, alignment breakdowns) — **not tables.** Multi-column free-text tables
+  collapse into unreadable one-character-per-line columns in Google Docs and Word. Use a
+  bold-led bullet per item, folding the comparison points into a short sentence with
+  inline labels (*Strength:* … *Weakness:* …). See the docx-conversion note above.
 - **Citations stay readable as link text.** Link inline as `[Source name, date](url)` so
   the visible text is meaningful even when the URL is hidden in Docs. The in-depth report
   ends with a categorized source list; the brief carries only the few load-bearing ones.
@@ -224,9 +257,10 @@ skip. The skill's whole value is a skeptical, well-sourced read; filler destroys
 ### Closing
 
 Tell the user where the four files landed (brief `.md`/`.docx`, report `.md`/`.docx`),
-give the headline recommendation **and the star rating** in chat, and remind them they
-can paste the Markdown into Google Docs with Markdown detection on, or open the `.docx`
-directly in Word.
+give the headline recommendation **and the gate-rating radar chart** in chat (share
+the PNG plus the gate score / alignment recap), and remind them they can paste the
+Markdown into Google Docs with Markdown detection on, or open the `.docx` directly in
+Word — and that a pasted-in Google Doc needs the chart image inserted manually.
 
 ---
 
@@ -532,13 +566,13 @@ the most uncertain ones could be validated in Stage 3. Distinguish value-based
 
 ### Output
 
-A summary table plus the reasoning:
+A bold-led bulleted summary (one bullet each for TAM / SAM / SOM), then the reasoning.
+Fold the estimate, the 2–3 year projection, the basis, and the confidence into each
+bullet — **do not use a table** (see the docx-conversion note). For example:
 
-| Metric | Current estimate | 2–3 year projection | Basis | Confidence |
-|--------|------------------|---------------------|-------|-----------|
-| TAM | | | top-down from [source] | |
-| SAM | | | filters applied | |
-| SOM | | | bottom-up: customers × price × frequency | |
+- **TAM — [estimate]** ([confidence]): top-down from [source]; [2–3 yr projection].
+- **SAM — [estimate]** ([confidence]): [filters applied]; [2–3 yr projection].
+- **SOM (1–3 yr) — [estimate]** ([confidence]): bottom-up: customers × price × frequency.
 
 Follow with **growth drivers** (what's expanding/contracting this market — funding
 shifts, policy, demographics) and **where the money comes from** (individuals,
@@ -574,17 +608,18 @@ direct competitors. For each, capture a compact profile:
 - **Model & pricing** — per-seat / per-usage / flat / freemium; price points;
   sales motion; revenue model and growth stage.
 
-Render as a table:
+Render as a **bold-led bulleted list, one bullet per competitor** (not a table — see
+the docx-conversion note). Lead with the org name in bold, then fold model, scale, and
+pricing posture into a short clause, and label the strength/weakness inline. For example:
 
-| Org | Model | Scale | Pricing posture | Strength | Weakness |
-|-----|-------|-------|-----------------|----------|----------|
+- **[Org]** — [model]; [scale]; [pricing posture]. *Strength:* [key advantages]. *Weakness:* [gaps].
 
 ### Then the layers the brief usually misses
 
 - **Adjacent players** — one step over; partially solve the problem or could
   extend into it. Include any **showing strain** (layoffs, lost contracts, down
   rounds) — a cautionary tale about the space's unit economics is a real finding.
-  Table: Org | Funding | Reach | Pricing | Notes.
+  One bold-led bullet each: **[Org]** — [funding]; [reach]; [pricing]. [notes incl. strain].
 - **Workarounds** — spreadsheets, free tools, manual/informal processes. Often the
   *true* incumbent: free, familiar, trusted, hardest to displace.
 - **"Do nothing"** — if the pain isn't acute enough to act, inertia wins and the
@@ -648,10 +683,11 @@ which is why a product that delights users can still fail to sell.
 
 Identify **3–5 distinct, non-overlapping buyer segments** (behavioral,
 demographic/firmographic, or needs-based). Segments should be **measurable,
-accessible, and distinct.** For each meaningful buyer path / channel, give:
+accessible, and distinct.** For each meaningful buyer path / channel, give a bold-led
+bullet (not a table — see the docx-conversion note), folding in who writes the check, the
+proven funding mechanism, any named buyer in motion, and your read. For example:
 
-| Channel | Who writes the check | Proven funding mechanism | Named buyer in motion? | Read |
-|---------|----------------------|--------------------------|------------------------|------|
+- **[Channel]** — check written by [who]; funded via [mechanism]; buyer in motion: [name or none]. *Read:* [assessment].
 
 Common Thrive channels: **districts / schools, states (legislative or agency line),
 foundations & nonprofits (grant pass-through), federal programs, institutions
@@ -662,7 +698,7 @@ each, and flag the one that is the credible **first dollar**.
 ### Output
 
 The three-role map, the 3–5 segments with JTBD and pain points, the buyer-path
-table, and a clear answer on the credible first dollar and sell-to-first sequence.
+bullets, and a clear answer on the credible first dollar and sell-to-first sequence.
 Flag any segment that needs primary research to confirm (a Stage 3 item).
 
 ---
@@ -712,7 +748,9 @@ is really table-stakes that competitors also have, name it as such.
 
 ### Output
 
-The pains↔relievers mapping (a short table is fine), the demonstrable difference vs.
+The pains↔relievers mapping (as a bulleted list — one bullet per pain, mapping it to
+the reliever/gain and a fit verdict, e.g. **[buyer pain]** → [pain reliever]. *Fit:*
+[verdict] — not a table), the demonstrable difference vs.
 the next best alternative, the outcomes-orientation read, and a ranked list of the
 genuine unique advantages — with the one or two that are actually decisive marked, and
 the load-bearing Thrive advantage named. End with a crisp **UVP statement**:
@@ -816,21 +854,22 @@ is the right register when the record is ambiguous.
 
 ---
 
-## Scorecard, Thrive-Alignment Sub-Score & Star Rating
+## Scorecard, Thrive-Alignment Sub-Score & Gate-Rating Radar Chart
 
 Both documents carry a lightweight **scoring layer** so the gate committee can see
 the read at a glance. It has three parts: the **four-criteria gate rubric** (scored
 1–3, the headline numbers), a **granular Thrive-alignment sub-score** (the deeper
-drill on fit), and a **five-star idea rating** (the visual gut-check). Score from
-the evidence you actually gathered — every score must be defensible from the body of
-the report, not vibes. When the evidence is thin for a criterion, score
-conservatively and say the score is provisional.
+drill on fit, rolled up to one overall number), and a **five-axis gate-rating radar
+chart** (the visual gut-check — the four gate criteria plus the overall alignment
+score, plotted together). Score from the evidence you actually gathered — every
+score must be defensible from the body of the report, not vibes. When the evidence
+is thin for a criterion, score conservatively and say the score is provisional.
 
 **Scores live with the content, not in a standalone scorecard table.** Each of the
 four criteria maps to a section the report already has, so report each score *inside
 its home section* as a short bold callout — e.g. `**Market Size: 2/3** —
 [one-line justification]` — where the section's evidence backs it up. The only
-scoring summary at the top of the doc is the **star rating plus a one-line recap** of
+scoring summary at the top of the doc is the **radar chart plus a one-line recap** of
 the totals (a dashboard, not a duplicate of the per-section reasoning).
 
 ### Part 1 — The four-criteria gate rubric (each 1–3)
@@ -859,20 +898,21 @@ one-line justification with the score in its home section.
 as a distinct, clearly-labeled line *next to* the Part 2 alignment sub-scorecard, not as
 one of the six alignment sub-categories. It counts toward the **/12 gate score**; it does
 **not** roll into the **/3 alignment average**. Think of it as a seventh line shown
-alongside the alignment table, scored on its own.
+alongside the alignment breakdown, scored on its own.
 
 Note: there is **no "Potential to Scale Thrive" criterion** — Thrive fit is scored in
-full by the Part 2 sub-score, so it isn't double-counted in this rubric. The headline
-recap carries the **Gate score (sum of the four, x/12)** alongside the star rating.
+full by the Part 2 sub-score, so it isn't double-counted in this rubric. All four
+scores also become axes of the Part 3 radar chart, and the headline recap carries the
+**Gate score (sum of the four, x/12)** alongside it.
 
 ### Part 2 — Thrive-alignment sub-score (granular, each 1–3)
 
 This sub-score is how the report scores Thrive fit in full — there is **no separate
 "Thrive" line in the four-criteria rubric**, so alignment is captured entirely here.
 Score each of the six characteristics **1–3** using the anchors below, then report
-the **overall as the average (x/3, one decimal)**. This table lives in the Thrive
-Mission Alignment section (brief) / §7 (in-depth), and the overall feeds the headline
-recap.
+the **overall as the average (x/3, one decimal)**. This breakdown lives in the Thrive
+Mission Alignment section (brief) / §7 (in-depth), and the overall feeds both the
+headline recap and the fifth axis of the Part 3 radar chart.
 
 | # | Alignment characteristic | Question | 1 | 2 | 3 |
 |---|--------------------------|----------|---|---|---|
@@ -883,34 +923,105 @@ recap.
 | 5 | Sibling-venture coherence | Does it sit cleanly alongside Attunify / Virtual Consultation / Carepath DSP? | Direct conflict / cannibalization with an existing venture, unresolved | Overlap that needs an internal positioning split before customer-facing work | Clean complement — no harmful overlap, possible shared-services upside |
 | 6 | Counter-mission risk | Could it cut against the mission or create values/reputational tension? | Material counter-mission risk that's hard to mitigate | Some tension; manageable with named guardrails | No meaningful counter-mission risk |
 
-Report it as a table with score + one-line justification per row and the rolled-up overall:
+Report it as a **bold-led bulleted list** (not a table — see the docx-conversion note),
+one bullet per characteristic with its score and a one-line justification, closing with
+the rolled-up overall:
 
-| # | Alignment characteristic | Score (1–3) | Why this score |
-|---|--------------------------|-------------|----------------|
-| 1 | Mission-domain fit | | |
-| 2 | Reach / impact multiplication | | |
-| 3 | Leverages Thrive's advantages | | |
-| 4 | Studio posture / economics fit | | |
-| 5 | Sibling-venture coherence | | |
-| 6 | Counter-mission risk | | |
-| | **Overall alignment** | **/3** | |
+- **Mission-domain fit — [score]/3:** [one-line justification].
+- **Reach / impact multiplication — [score]/3:** [one-line justification].
+- **Leverages Thrive's advantages — [score]/3:** [one-line justification].
+- **Studio posture / economics fit — [score]/3:** [one-line justification].
+- **Sibling-venture coherence — [score]/3:** [one-line justification].
+- **Counter-mission risk — [score]/3:** [one-line justification].
+- **Overall alignment — [x.x]/3:** [what the shape reveals].
 
-### Part 3 — Five-star idea rating (independent holistic judgment)
+### Part 3 — Gate-rating radar chart (five axes, plotted from the scores above)
 
-A single **★ rating out of 5** for the idea, as an easy visual — the same kind of
-output as the headline recommendation, not a formula. Form it as your honest
-overall read; it is **allowed to diverge from the arithmetic** when one fatal flaw
-(or one exceptional strength) outweighs otherwise-average scores. Round to the
-nearest half-star and always print the number so it's unambiguous. Use `★` for full,
-`½` for a half, `☆` for empty, to five positions total (★★★★★ = 5, ★★★½☆ = 3.5,
-★★☆☆☆ = 2, and so on), with a one-line rationale.
+Plot the **four gate-rubric criteria plus the overall Thrive-alignment score** on one
+five-axis radar (spider) chart — the visual gut-check that replaces the old star
+rating. Unlike the star rating, this isn't an independent judgment call — it's a
+direct plot of scores you already computed in Parts 1 and 2, so there's nothing new
+to decide here beyond laying it out clearly:
 
-This is the **top-of-doc dashboard** — render the star rating on one line with the
-headline recap of the totals, so the reader sees everything at a glance before the
-per-section scores:
+| Axis | Score | Source |
+|------|-------|--------|
+| Market Size | x/3 | Part 1 — Market Overview (§3 / in-depth; Market Overview / brief) |
+| Competitive Position | x/3 | Part 1 — Competitor Landscape (§4 / in-depth; Competitor Landscape / brief) |
+| Feasibility | x/3 | Part 1 — Thrive Mission Alignment (§7 / in-depth; Thrive Mission Alignment / brief) |
+| Revenue Potential | x/3 | Part 1 — Market Overview (§3 / in-depth; Market Overview / brief) |
+| Thrive Alignment (overall) | x.x/3 | Part 2 overall — Thrive Mission Alignment (§7 / in-depth; Thrive Mission Alignment / brief) |
 
-> **Idea rating: ★★★½☆ (3.5/5)** · Gate score 8/12 · Thrive alignment 2.3/3
-> _One-line rationale for the rating._
+All five axes share the **same 1–3 scale**, which is what makes them comparable on
+one chart. A text/glyph rendering can't show five axes at once, so this one has to be
+a generated image:
+
+- Five evenly spaced spokes, one per row above, with gridlines at 1, 2, and 3.
+- A single closed polygon connecting the five values, lightly filled.
+- Each axis labeled with **both its name and its score** (e.g. `Market Size (3/3)`)
+  so the reader isn't left estimating position against the gridlines.
+- One consistent color per venture across the brief and the in-depth report; a plain
+  white background so it reproduces cleanly in print and in Word.
+
+Matplotlib's polar-axes projection is the simplest path if it's available in the
+execution environment (the same environment already used for the `.docx` conversion):
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+title = "Venture Name — Gate Rating"  # replace with this venture's name
+labels = ["Market Size", "Competitive Position", "Feasibility",
+          "Revenue Potential", "Thrive Alignment"]
+scores = [3, 2, 2, 1, 2.3]  # replace with this venture's actual scores, 1-3 scale
+color = "#2E5EAA"
+
+n = len(labels)
+angles = np.linspace(0, 2 * np.pi, n, endpoint=False).tolist()
+values = scores + scores[:1]
+closed = angles + angles[:1]
+
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+
+# First axis at top, going clockwise — the conventional, symmetric radar layout.
+ax.set_theta_offset(np.pi / 2)
+ax.set_theta_direction(-1)
+
+ax.plot(closed, values, linewidth=2, color=color, zorder=3)
+ax.fill(closed, values, color=color, alpha=0.22, zorder=2)
+
+# Hard-cap the scale at 3 so the outer gridline IS the boundary (no wasted ring).
+ax.set_ylim(0, 3)
+ax.set_yticks([1, 2, 3])
+ax.set_yticklabels(["1", "2", "3"], color="#8a8a8a", fontsize=9)
+# Park the radial 1/2/3 labels between two spokes so they never sit on the polygon.
+ax.set_rlabel_position(360 / n / 2)
+
+ax.set_xticks(angles)
+ax.set_xticklabels([f"{l}\n({s}/3)" for l, s in zip(labels, scores)], fontsize=11)
+ax.tick_params(axis="x", pad=14)  # keep axis labels clear of the outer ring
+
+# Light grey web; drop the heavy default outer spine.
+ax.grid(color="#cfcfcf", linewidth=0.8)
+ax.spines["polar"].set_color("#cfcfcf")
+ax.spines["polar"].set_linewidth(0.8)
+
+ax.set_title(title, fontsize=15, pad=28)
+fig.savefig("gate-rating-radar.png", dpi=200, bbox_inches="tight", facecolor="white")
+```
+
+If matplotlib (or an equivalent plotting tool) isn't available in the environment,
+say so plainly and fall back to the table above plus the text recap below — don't
+fabricate an image or silently drop the visual.
+
+**Save one PNG per venture** (e.g. `gate-rating-radar.png`) and embed the same image
+in both docs — see the embedding and Google-Docs-paste guidance above. This is the
+**top-of-doc dashboard** — place it right under the `## Scorecard` heading, above the
+per-criterion detail, so the reader sees everything at a glance:
+
+> ![Gate rating radar chart](gate-rating-radar.png)
+> **Gate score 8/12 · Thrive alignment 2.3/3**
+> _One-line takeaway — what the shape reveals (e.g. strong feasibility and alignment
+> offsetting thin revenue potential), not a separate score._
 
 ---
 
@@ -940,9 +1051,10 @@ _[Project subheading: what it is, for whom] · Recommendation: [GO / CONDITIONAL
 conditional, name the one condition that decides it.]
 
 ## Scorecard
-**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
-_[one-line rationale for the rating; holistic, not a formula]_
-[Per-criterion scores sit in their home sections below: Market Size & Revenue Potential in Market Overview, Competitive Position in Competitor Landscape, Feasibility in Thrive Mission Alignment.]
+![Gate rating radar chart](gate-rating-radar.png)
+**Gate score [x]/12 · Thrive alignment [x.x]/3**
+_[one-line takeaway — what the shape reveals, not a separate score]_
+[Per-criterion scores sit in their home sections below: Market Size & Revenue Potential in Market Overview, Competitive Position in Competitor Landscape, Feasibility in Thrive Mission Alignment. Chart axes (all 1–3 scale): Market Size, Competitive Position, Feasibility, Revenue Potential, Thrive Alignment (overall).]
 
 ## The Hypothesis
 _If we provide [X], then [buyer] will [measurable outcome]._
@@ -975,15 +1087,15 @@ is load-bearing here.]
 [One or two lines: on-mission? fits the $3–15M sustainable, non-VC posture? any tension
 (capital model, sibling-venture overlap, counter-mission risk) that needs an internal call.]
 
-| # | Alignment characteristic | Score (1–3) | Why |
-|---|--------------------------|-------------|-----|
-| 1 | Mission-domain fit | | [one line] |
-| 2 | Reach / impact multiplication | | [one line] |
-| 3 | Leverages Thrive's advantages | | [one line] |
-| 4 | Studio posture / economics fit | | [one line] |
-| 5 | Sibling-venture coherence | | [one line] |
-| 6 | Counter-mission risk | | [one line] |
-| | **Overall alignment** | **/3** | |
+The six-part alignment breakdown (each scored 1–3):
+
+- **Mission-domain fit — [x]/3:** [one line]
+- **Reach / impact multiplication — [x]/3:** [one line]
+- **Leverages Thrive's advantages — [x]/3:** [one line]
+- **Studio posture / economics fit — [x]/3:** [one line]
+- **Sibling-venture coherence — [x]/3:** [one line]
+- **Counter-mission risk — [x]/3:** [one line]
+- **Overall alignment — [x.x]/3:** [what the shape reveals]
 
 **Feasibility (gate criterion — separate from the alignment average above): [x]/3** — [can Thrive build & deliver this in 12–18 months? counts toward the /12 gate score, not the /3 alignment overall]
 
@@ -1001,7 +1113,8 @@ venture owner and the operating leads. It is **Thrive's Desk Research Template w
 every section researched to depth**, plus the gate-committee sections the template
 doesn't carry (public-record verification, operator priors, answers to the brief's
 open questions). Lead with prose and evidence; keep citations inline as readable
-`[Source, date](url)` links; use the tables shown. Skeptical and analytical, not
+`[Source, date](url)` links; use the bold-led bulleted lists shown (not tables — they
+collapse in Word/Google Docs). Skeptical and analytical, not
 promotional. Use these headings as written so it pastes cleanly into Google Docs.
 Target a **full 5–10 pages (~2,500–5,000 words)** — give every section real treatment;
 thinness reads as incomplete work. **§4 Competitor Landscape and §5 User/Payor/Referrer
@@ -1019,9 +1132,10 @@ recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) and likely path
 (spin-out / spin-in / shutdown).]
 
 ## Scorecard
-**Idea rating: ★★★½☆ (3.5/5)** · Gate score [x]/12 · Thrive alignment [x.x]/3
-_[one-line rationale; holistic judgment, allowed to diverge from the arithmetic]_
-[Per-criterion scores are reported in their home sections: Market Size & Revenue Potential in §3, Competitive Position in §4, Feasibility in §7 (alongside the alignment table, as its own gate criterion). The 6-part Thrive-alignment breakdown is also in §7.]
+![Gate rating radar chart](gate-rating-radar.png)
+**Gate score [x]/12 · Thrive alignment [x.x]/3**
+_[one-line takeaway — what the shape reveals, not a separate score]_
+[Per-criterion scores are reported in their home sections: Market Size & Revenue Potential in §3, Competitive Position in §4, Feasibility in §7 (alongside the alignment breakdown, as its own gate criterion). The 6-part Thrive-alignment breakdown is also in §7. Chart axes (all 1–3 scale): Market Size, Competitive Position, Feasibility, Revenue Potential, Thrive Alignment (overall).]
 
 ## 1. The Hypothesis & Why Now
 ### The hypothesis (If/Then)
@@ -1042,11 +1156,11 @@ real footprint, named evidence base, brand/naming risks, brief-vs-record gaps.]
 
 ## 3. Market Overview (TAM / SAM / SOM)
 **Market Size: [x]/3** · **Revenue Potential: [x]/3** — [one line each, scored from the sizing and revenue read in this section]
-| Layer | Size | Basis | Confidence |
-|-------|------|-------|-----------|
-| TAM | | top-down [source] | |
-| SAM | | filters | |
-| SOM (1–3 yr) | | bottom-up: customers × price × frequency | |
+
+- **TAM — [size]** ([confidence]): top-down [source].
+- **SAM — [size]** ([confidence]): [filters applied].
+- **SOM (1–3 yr) — [size]** ([confidence]): bottom-up: customers × price × frequency.
+
 [Reconcile top-down vs. bottom-up; growth drivers; where the money comes from
 (grants / org budgets / individual spend / government); segment demand by behavior —
 who is desperately looking vs. mildly interested. Honest about estimates.]
@@ -1054,11 +1168,9 @@ who is desperately looking vs. mildly interested. Honest about estimates.]
 ## 4. Competitive Landscape
 **Competitive Position: [x]/3** — [one line, justified by the landscape below]
 ### Direct competitors (identify ~5, profile each)
-| Org | Model | Scale | Pricing posture | Strength | Weakness |
-|-----|-------|-------|-----------------|----------|----------|
+[One bold-led bullet per competitor: **[Org]** — [model]; [scale]; [pricing posture]. *Strength:* [advantages]. *Weakness:* [gaps].]
 ### Adjacent solutions
-| Org | Funding | Reach | Pricing | Notes (incl. any strain) |
-|-----|---------|-------|---------|--------------------------|
+[One bold-led bullet each: **[Org]** — [funding]; [reach]; [pricing]. [notes incl. any strain].]
 ### Workarounds & "do nothing"
 [The real incumbent — spreadsheets, group texts, free tools, status quo, inertia.
 Where does "do nothing" sit on the spectrum — is the pain acute enough to act?]
@@ -1077,15 +1189,13 @@ Where does "do nothing" sit on the spectrum — is the pain acute enough to act?
 ### Jobs-to-be-Done per role
 [The user's job and the payor's job (budget / mandate / risk / reporting) — these differ.]
 ### Segments & buyer paths (3–5)
-| Channel | Who writes the check | Proven funding mechanism | Named buyer in motion? | Read |
-|---------|----------------------|--------------------------|------------------------|------|
+[One bold-led bullet per channel: **[Channel]** — check written by [who]; funded via [mechanism]; buyer in motion: [name or none]. *Read:* [assessment].]
 ### First dollar & sell-to-first
 [The credible first dollar, the sequence, and any segment needing Stage 3 primary research.]
 
 ## 6. UVP & Unique Advantages
 ### Pains ↔ pain relievers (Value Proposition Canvas)
-| Buyer pain / job | Venture's pain reliever / gain | Fit? |
-|------------------|-------------------------------|------|
+[One bold-led bullet per pain: **[buyer pain / job]** → [venture's pain reliever / gain]. *Fit:* [verdict].]
 ### Demonstrable difference vs. the next best alternative
 [What this does that the alternative can't, in terms the buyer can verify.]
 ### Outcomes orientation & unique advantages
@@ -1104,15 +1214,15 @@ best alternative] — because [defensible difference]._
 **Stays at the university vs. spins out:** [research/IP/credibility vs. ops/GTM]
 
 ### Thrive-alignment sub-score (this is how Thrive fit is scored — no separate gate criterion)
-| # | Alignment characteristic | Score (1–3) | Why this score |
-|---|--------------------------|-------------|----------------|
-| 1 | Mission-domain fit | | |
-| 2 | Reach / impact multiplication | | |
-| 3 | Leverages Thrive's advantages | | |
-| 4 | Studio posture / economics fit | | |
-| 5 | Sibling-venture coherence | | |
-| 6 | Counter-mission risk | | |
-| | **Overall alignment** | **/3** | |
+The six-part alignment breakdown (each scored 1–3):
+
+- **Mission-domain fit — [x]/3:** [one line]
+- **Reach / impact multiplication — [x]/3:** [one line]
+- **Leverages Thrive's advantages — [x]/3:** [one line]
+- **Studio posture / economics fit — [x]/3:** [one line]
+- **Sibling-venture coherence — [x]/3:** [one line]
+- **Counter-mission risk — [x]/3:** [one line]
+- **Overall alignment — [x.x]/3:** [what the shape reveals]
 
 **Feasibility (gate criterion — separate from the alignment average above): [x]/3** — [can Thrive build & deliver this in 12–18 months, given capability/capacity? counts toward the /12 gate score, not the /3 alignment overall]
 
