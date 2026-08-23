@@ -90,7 +90,7 @@ org-wide skills; to scope it to a subset, bundle it into a plugin assigned to a 
    once research surfaces something worth checking.
 5. **Get your deliverables.** It writes both docs (each as Markdown **and** Word) and
    gives you the headline recommendation (GO / CONDITIONAL GO / HOLD / NO-GO) plus the
-   5-star idea rating in the chat.
+   gate-rating radar chart in the chat.
 
 Plan for an **interactive ~10–15 minute session**, not a fire-and-forget button —
 the clarifying loop is the point, and it's what keeps the research honest.
@@ -105,10 +105,10 @@ advantages → mission alignment → open questions — with the **competitor la
 **user/payor/referrer map** treated as the priority sections.
 
 - **`<venture>-decision-brief.md` / `.docx`** — the 1–2 page call: recommendation up top,
-  a **dashboard** (5-star idea rating + gate score + Thrive-alignment score), then the
-  template sections each compressed to their load-bearing line(s), with each gate-criterion
-  score sitting in its own section and the granular Thrive-alignment sub-score in the
-  alignment section.
+  a **dashboard** (a 5-axis gate-rating radar chart + gate score + Thrive-alignment score),
+  then the template sections each compressed to their load-bearing line(s), with each
+  gate-criterion score sitting in its own section and the granular Thrive-alignment
+  sub-score in the alignment section.
 - **`<venture>-indepth-report.md` / `.docx`** — the full evidence: the same template
   researched to depth, the scorecard, public-record verification of the venture's own
   claims, operator priors, the 6-part Thrive-alignment breakdown, point-by-point answers
@@ -134,9 +134,9 @@ Each doc carries a lightweight scoring layer so the gate committee gets the read
   posture/economics fit, sibling-venture coherence, counter-mission risk), rolled up to an
   overall **/3** in the alignment section. This *is* how Thrive fit is scored — there's no
   separate "Thrive" criterion in the gate rubric, so it isn't double-counted.
-- **A 5-star idea rating** (★ out of 5) — a holistic visual gut-check at the top of each
-  doc (with the gate-score and alignment recap), allowed to diverge from the arithmetic
-  when one fatal flaw or standout strength dominates.
+- **A 5-axis gate-rating radar chart** — the four gate criteria plus the overall
+  Thrive-alignment score, plotted together as a visual gut-check at the top of each
+  doc (image, generated per venture), alongside the gate-score and alignment recap.
 
 ---
 
