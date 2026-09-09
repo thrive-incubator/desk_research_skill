@@ -249,6 +249,13 @@ The harness records which skill version produced each result, so the two runs st
 comparable. Look for a sharper why-now, correctly classified rule durability, and
 named funding channels — not just a longer report.
 
+The harness renders its scoreboard as a single self-contained HTML page, and the most
+recent one is checked in here: **[`evaluation/carepath-config-sweep.html`](evaluation/carepath-config-sweep.html)**
+— five CarePath briefs across Opus 4.8, Sonnet 5 and Haiku 4.5, sixteen tests each.
+GitHub shows `.html` as source, so download the raw file and open it in a browser.
+[`evaluation/README.md`](evaluation/README.md) has the headline numbers and the two
+ways the scores are easy to misread.
+
 ### Installing a local build
 
 `install.sh` fetches `SKILL.md` and `README.md` from the published repo, so it does
