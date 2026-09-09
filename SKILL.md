@@ -97,6 +97,14 @@ say what you're about to research and proceed.
 
 ### Beat 2 — Research, then ask follow-ups informed by findings
 
+**Start with the field knowledge vaults.** If the venture touches K12 schools or
+the Head Start / early-childhood ecosystem, read `references/vaults/VAULTS.md` and
+follow its read protocol *before* you open the web. The vaults are the Incubator's
+standing, weekly-updated read on how money and policy are actually moving in those
+fields — they will usually tell you what the why-now really rests on, which funding
+channels are durable, and which vendors are already in the room. They are a head
+start that still needs verifying, never a citation.
+
 Run the desk research using the method references (next section), grounding every
 load-bearing claim in a cited source and verifying the venture's own claims
 against the public record. As real information surfaces, **expect to go back to
@@ -134,6 +142,39 @@ load-bearing claims. **Verify the venture's self-description against the record*
 brand/naming risks plainly. When a number doesn't exist, say so and reason from the
 nearest proxy, labeled as an estimate — never fabricate a figure. Note where
 pricing is opaque/quote-based; that absence is itself a finding to test later.
+
+**Never cite an internal vault.** Where field context came from the bundled knowledge
+vaults, cite the public source *the vault cites*, with its publication date — and open
+that source first when the claim is load-bearing. The full rule, including how to treat
+entries the vault flags as unverified, is in `references/vaults/VAULTS.md`.
+
+### Field knowledge vaults
+
+Two internal Thrive knowledge bases ship with this skill under `references/vaults/`,
+each accreted weekly from public sources with a dated citation on every claim:
+
+- **`k12/`** — the K12 edtech funding ecosystem, federal money down through state
+  systems, district and charter purchasing, to the vendor layer, weighted toward
+  student wellbeing and mental health.
+- **`headstart/`** — the Head Start ecosystem, HHS → ACF → Office of Head Start → the
+  ~1,600 local grantees (no state pass-through), read as entry strategy for founders.
+
+Consult them whenever the venture touches schools, districts, charters, school-based
+mental health, SEL, screening, edtech procurement — or Head Start, early childhood,
+the ECE workforce, IECMH consultation, home visiting, or child care. Skip them, in one
+line, when the venture sits outside both fields.
+
+They are strongest on **why-now and regulatory dependence** — both track live
+rulemaking, comment deadlines, and whether a requirement rests on statute, a final
+rule, an NPRM, or mere guidance — and on which funding channels have proven durable.
+They are weakest where their weekly scan doesn't reach: district RFPs and contract
+awards, state allocation mechanics, peer-reviewed journals, philanthropy, and state
+bill tracking. **A competitor or program absent from a vault simply didn't surface in
+a weekly scan** — never read vault silence as evidence of absence.
+
+`references/vaults/VAULTS.md` carries the read protocol, the citation rule, the
+coverage limits, and how to refresh a stale snapshot. Read it before using either
+vault; don't read a vault end to end.
 
 ## The two outputs
 
@@ -545,18 +586,78 @@ number.
 - **SOM** — the achievable share in the next **1–3 years** given competition and
   go-to-market reality (what it can land soon, and the revenue).
 
-### Always estimate two ways, then reconcile
+### Build TAM from money blocks, not populations
 
-1. **Top-down.** Start from a published industry/market figure and narrow it with
-   defensible filters (geography, segment, eligibility). Cite the source and date.
-2. **Bottom-up.** Build from units: **customers × price × frequency**. This forces
-   explicit assumptions and usually produces the more credible number for a focused
-   venture.
+Headline population counts (workforce sizes, program counts, patient prevalence) are
+almost never the constraint in Thrive's markets — **funded, provider-agnostic budget
+lines are.** Construct TAM as the sum of named money blocks, one bold-led bullet each
+(not a table — see the docx-conversion note), with the arithmetic inside the bullet:
 
-If the two diverge wildly, that gap *is* a finding — say which you trust and why.
-For Thrive ventures the bottom-up number usually matters most: the buyer is
-often a finite, countable set (districts, programs, state agencies, clinician
+- **[Block — the budget line it represents]** — [the multiplication, shown: e.g.
+  1,600 grantees × $12k average annual T/TA training spend]; [growing / stable /
+  declining], exposed to [policy / appropriations / demographics]; **$[annual]**.
+
+Four rules make the blocks worth having:
+
+1. **Name each block by its budget line** — federal T/TA funds × relevant share, state
+   program budgets × training slice, individual PD spend = purchaser pool × average
+   spend. Anchor every coefficient to a cited number where one exists; label the rest
+   as estimates.
+2. **Show the multiplication** for every block. A reader should be able to recompute
+   the line and disagree with a specific coefficient, not with a vibe.
+3. **Tag each block's direction and exposure.** The block structure is what makes
+   exposure visible — it shows at a glance what fraction of TAM is a bet on one funding
+   stream or one rule (see the regulatory-dependence stress test below).
+4. **Separate core from expansion TAM.** Adjacent spend reachable only after a product
+   expansion goes in a clearly-labelled expansion line, excluded from the core number
+   the gate scores against.
+
+Still reconcile against a **top-down** check when a published market figure exists: if
+the two diverge wildly, that gap *is* a finding — say which you trust and why. For
+Thrive ventures the constructed bottom-up number usually matters most, because the
+buyer is often a finite, countable set (districts, programs, state agencies, clinician
 cohorts), so count it.
+
+### SAM: named filters with retention rates
+
+Don't assert a SAM — derive it. List each filter that shrinks TAM to serviceable
+(product-specificity, geography/language, delivery model, buyers reachable by an
+outside provider, credential/eligibility constraints) as its own bullet, with the
+retention percentage it applies, then show the compounding:
+
+- **[Filter]** — [what it removes and why]; retains **[x]%** of [which blocks].
+
+Two effects this produces: the reader sees *why* SAM is an order of magnitude below the
+headline populations, and Stage 3 knows exactly which filter assumptions to test —
+each filter is a falsifiable claim.
+
+### SOM: channels with the reach mechanism named
+
+SOM is not a percentage of SAM — it is a sum of channels, each with the mechanism by
+which a dollar actually arrives. One bold-led bullet per channel:
+
+- **[Channel]** — reached via [procurement vehicle / budget line]; [sales cycle];
+  [n deals × m units per deal] = **[units]**.
+
+Then **units × blended price = SOM**, with a stated central case. Three sanity checks,
+each reported:
+
+- **Capture rate.** SOM ÷ SAM above ~25% by year 3 is a red flag — justify it
+  explicitly or cut the number.
+- **Cycle-time honesty.** If the anchor channel's sales cycle is 9–18 months (state
+  procurement), year-1 revenue from it is near zero. Say so.
+- **Zero-evidence flag.** Any channel with no named buyer in motion is speculative
+  regardless of how good the logic is. Naming those channels is a core Stage 3 agenda
+  item, not a footnote.
+
+### The reachability ladder (SOM → SAM → TAM)
+
+Close the sizing with 3–5 lines on what must become true to climb each band — renewals
+proving the procurement mechanism repeats, evidence unlocking provider-agnostic budget
+lines, partnerships neutralising an eligibility filter, product expansion opening the
+expansion blocks. The ladder converts the sizing from a static estimate into a testable
+growth thesis, and it is the direct answer to "how does the venture reach the TAM and
+SAM".
 
 ### Label every assumption
 
@@ -566,13 +667,19 @@ the most uncertain ones could be validated in Stage 3. Distinguish value-based
 
 ### Output
 
-A bold-led bulleted summary (one bullet each for TAM / SAM / SOM), then the reasoning.
-Fold the estimate, the 2–3 year projection, the basis, and the confidence into each
-bullet — **do not use a table** (see the docx-conversion note). For example:
+A bold-led bulleted summary (one bullet per layer), then the reasoning underneath.
+Fold the construction, the estimate, the 2–3 year projection, the direction and its
+exposure, and the confidence into each bullet — **do not use a table** (see the
+docx-conversion note). For example:
 
-- **TAM — [estimate]** ([confidence]): top-down from [source]; [2–3 yr projection].
-- **SAM — [estimate]** ([confidence]): [filters applied]; [2–3 yr projection].
-- **SOM (1–3 yr) — [estimate]** ([confidence]): bottom-up: customers × price × frequency.
+- **TAM (core) — [estimate]** ([confidence]): sum of blocks [A] + [B] + [C];
+  [2–3 yr projection]; [direction], exposed to [what].
+- **Expansion TAM — [estimate]** ([confidence]): [blocks reachable only after
+  [expansion]] — excluded from the core number the gate scores against.
+- **SAM — [estimate]** ([confidence]): [filters × retention, compounded];
+  [2–3 yr projection].
+- **SOM (1–3 yr) — [estimate]** ([confidence]): [channels] → [units] × [blended
+  price]; capture rate [x]% of SAM.
 
 Follow with **growth drivers** (what's expanding/contracting this market — funding
 shifts, policy, demographics) and **where the money comes from** (individuals,
@@ -580,6 +687,46 @@ districts, states, foundations, grants, federal). For a studio targeting a
 sustainable **$3–15M ARR** business, explicitly note whether the honest SOM/SAM
 sizes like that band — a market that's "too small to matter" or "needs unicorn
 scale to work" is itself a decision-relevant finding.
+
+### Regulatory-dependence stress test (mandatory when the why-now is a rule)
+
+If any of the venture's timing forces or demand drivers is a regulation, mandate, or
+compliance requirement, this test is not optional — run it and report it in §3.
+
+The lesson is from the Ripple/Attunify retrospective: the 2024 Head Start consultation
+mandate was the report's #1 why-now and first-dollar thesis; a 2026 NPRM proposed
+rescinding it, and ACF's own savings model assumed buyers would cut the very personnel
+the venture trains. **A mandate is an accelerant, not a foundation** — size and score
+the venture as if it must survive without it.
+
+1. **Classify the rule's durability.** Statute > final rule > proposed rule (NPRM) >
+   sub-regulatory guidance > agency practice. State which one it is, the mechanism that
+   could reverse it (rulemaking, appropriations, enforcement posture, litigation), who
+   controls that mechanism, and any live reversal signal (pending NPRMs, budget
+   proposals, comment periods with dates).
+   For K12 and Head Start rules, check the field vaults first — tracking exactly this
+   (durability, reversal mechanism, open comment periods with dates) is what they are
+   best at. See `references/vaults/VAULTS.md`.
+2. **Split demand into compelled vs. voluntary.** Decompose the TAM money blocks into
+   (a) spend that exists because buyers must comply and (b) spend that existed before
+   the rule or would persist without it — voluntary quality spend, state programs with
+   independent funding, secular problem pressure. Report the compelled share as a
+   percentage of TAM.
+3. **Run the reversal scenario.** Restate TAM/SAM/SOM with the compelled block haircut
+   to near zero. If the rule also *normalises* not buying (e.g. an agency's cost model
+   assumes cuts), say so — reversal can turn a tailwind into a headwind, not just to
+   zero.
+4. **Score against the voluntary remainder.** When the compelled share exceeds ~40% of
+   TAM, score Revenue Potential (Part 1 rubric) against the voluntary remainder and
+   report the compelled upside separately. Compelled demand that one administration can
+   propose away is not "buyer evidence" for the 3/3 anchor.
+5. **Rank it as a riskiest assumption.** Add rule-reversal to §10, ranked by how fast
+   reversal could occur (enforcement pause: months; rulemaking: 1–2 years; statute: an
+   act of Congress) — not by whether it currently seems likely.
+6. **Name the reversal-resilient wedge.** If the venture survives the scenario, say what
+   the mandate-independent reason to buy is, in the buyer's words. If it doesn't
+   survive, that is the finding — a compulsion-only business fails the studio's
+   sustainability posture regardless of year-1 revenue.
 
 ---
 
@@ -885,6 +1032,11 @@ one-line justification with the score in its home section.
 | 3 | Feasibility | How realistically can Thrive build and deliver this within 12–18 months? | Not feasible — requires capabilities, partnerships, or capital we don't have | Feasible with significant effort; some gaps to fill | Highly feasible — fits squarely in Thrive's capability and capacity |
 | 4 | Revenue Potential | How strong is the path to earned revenue at meaningful scale ($1M+ ARR)? | No credible path to earned revenue; grant-dependent | Possible revenue model but speculative; comparable businesses thin | Clear path to $1M+ ARR with credible unit economics and buyer evidence |
 
+*Rubric note:* where the regulatory-dependence stress test finds more than ~40% of TAM
+is compelled demand, apply the Revenue Potential anchors to the **voluntary remainder**
+and report the compelled upside separately; compelled spend alone does not satisfy the
+"buyer evidence" language of the 3/3 anchor.
+
 **Where each score goes** (its home section in the output):
 
 | Criterion | Home section — in-depth report | Home section — brief |
@@ -1148,7 +1300,10 @@ the burning problem, the measurable change.]
 ### Research base for the thesis
 [Independently triangulate the venture's core claim against the literature.]
 ### Why now — the inflection
-[Timing forces — funding shifts, policy, market moves — that make the window real.]
+[Timing forces — funding shifts, policy, market moves — that make the window real.
+If any force is a regulation or mandate: state its legal durability (statute / final
+rule / NPRM / guidance), the reversal mechanism and who controls it, and flag that the
+regulatory-dependence stress test is run in §3.]
 
 ## 2. What the Public Record Shows
 [Verify the venture's claims about itself and its world: originating program/lab and
@@ -1157,13 +1312,30 @@ real footprint, named evidence base, brand/naming risks, brief-vs-record gaps.]
 ## 3. Market Overview (TAM / SAM / SOM)
 **Market Size: [x]/3** · **Revenue Potential: [x]/3** — [one line each, scored from the sizing and revenue read in this section]
 
-- **TAM — [size]** ([confidence]): top-down [source].
-- **SAM — [size]** ([confidence]): [filters applied].
-- **SOM (1–3 yr) — [size]** ([confidence]): bottom-up: customers × price × frequency.
+### TAM — money blocks, arithmetic shown
+[One bold-led bullet per block (not a table): **[Block — its budget line]** —
+[the multiplication, shown]; [direction], exposed to [what]; **$[annual]**.
+Separate core from expansion TAM; the expansion line is excluded from the number
+the gate scores against.]
 
-[Reconcile top-down vs. bottom-up; growth drivers; where the money comes from
-(grants / org budgets / individual spend / government); segment demand by behavior —
-who is desperately looking vs. mildly interested. Honest about estimates.]
+### SAM — named filters with retention
+[One bullet per filter: **[Filter]** — [what it removes]; retains **[x]%** of
+[which blocks]. Then show the compounding down to the SAM band.]
+
+### SOM — channels with reach mechanisms
+[One bullet per channel: **[Channel]** — reached via [procurement vehicle / budget
+line]; [sales cycle]; [n deals × m units] = **[units]**. Then units × blended price
+= SOM band + central case. Report the capture-rate sanity check (flag >25% of SAM by
+year 3) and flag any channel with no named buyer in motion as speculative.]
+
+### Reachability ladder
+[What must become true to climb SOM → SAM → TAM.]
+
+[Then, as before: reconcile against any top-down figure; growth drivers; where the
+money comes from (grants / org budgets / individual spend / government); segment
+demand by behavior — who is desperately looking vs. mildly interested. If a rule
+drives demand, report the compelled-vs-voluntary split and the reversal scenario
+from the regulatory-dependence stress test here. Honest about estimates.]
 
 ## 4. Competitive Landscape
 **Competitive Position: [x]/3** — [one line, justified by the landscape below]
@@ -1241,6 +1413,8 @@ the evidence, and what's left for Stage 2.]
 1. ...
 ### Yellow flags / riskiest assumptions (ranked by how fast the venture dies if true)
 1. ...
+[If a rule anchors demand: include the rule-reversal scenario as a ranked assumption,
+with its quantified impact on SOM and the reversal speed.]
 ### Recommended next steps (in execution order)
 1. [highest-leverage, cheapest test first]
 ### Open research questions for Stage 3 (customer discovery)

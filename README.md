@@ -145,9 +145,15 @@ Each doc carries a lightweight scoring layer so the gate committee gets the read
 - **It's a skeptic, by design.** It tries to *disprove* the idea — pressure-testing
   willingness-to-pay, "no competitor" claims, and the evidence base — so the brief
   may be more critical than a pitch deck. That's the value.
-- **It only knows the public record + what you tell it.** No access (yet) to
-  Interview Lens or Thrive Search. If you have internal price intuition, a named
-  buyer, or unpublished research, tell it in the clarifying round.
+- **It only knows the public record, the bundled field vaults, and what you tell
+  it.** No access (yet) to Interview Lens or Thrive Search. If you have internal
+  price intuition, a named buyer, or unpublished research, tell it in the
+  clarifying round.
+- **Field context on K12 and Head Start comes bundled.** The skill ships with the
+  Incubator's two knowledge vaults, so on ventures in those fields it starts from a
+  standing read of the funding and policy weather instead of from zero — see
+  *Field knowledge vaults* below. Outside those fields it researches from scratch
+  as before.
 - **Built-in studio context is dated (~April–May 2026).** The skill carries the
   Studio's model, pipeline, people, and sibling ventures so its fit analysis is
   sharp — but if the live situation has changed, say so in chat and the session wins.
@@ -159,10 +165,96 @@ Each doc carries a lightweight scoring layer so the gate committee gets the read
 
 ## Maintaining the skill
 
-Everything lives in **`SKILL.md`** — it's fully self-contained (flow, research
-methods, studio/center/people context, and both output templates are all inlined).
-To change behavior, the output template, or refresh the studio context, edit that
-one file. No other files are required for it to run.
+Behavior lives in **`SKILL.md`** — flow, research methods, studio/center/people
+context, and both output templates are all inlined there. To change behavior, the
+output template, or refresh the studio context, edit that one file.
+
+Two supporting pieces sit alongside it and travel with the skill:
+
+- **`references/vaults/`** — the bundled field knowledge vaults (see below).
+- **`scripts/refresh-vaults.sh`** — pulls those vaults up to date.
+
+### Field knowledge vaults
+
+The skill bundles read-only snapshots of the Incubator's two knowledge vaults —
+`thrive-incubator/k12-synthesis` and `thrive-incubator/headstart-synthesis`, both
+public — under `references/vaults/`. They give it a standing, weekly-updated read on
+the K12 and Head Start funding and policy ecosystems, which is where the *why-now*
+and the regulatory-dependence stress test usually get decided.
+
+**Refresh them before a run on a venture in either field.** Digests land weekly:
+
+```bash
+./scripts/refresh-vaults.sh
+```
+
+Read-only against the source repos, no credentials needed, takes seconds. It re-pulls
+both repos, re-bakes `references/vaults/k12/` and `references/vaults/headstart/`, and
+rewrites `references/vaults/SNAPSHOT.md` with the commit and latest digest week of
+each. Then re-run the installer so the installed copies pick it up.
+
+Never hand-edit anything under `references/vaults/` — those files belong to the vault
+repos, and a refresh overwrites them wholesale. Fixes go upstream. The routing rules
+the skill actually follows — when to consult a vault, the read order, the rule that a
+vault is never cited in a deliverable — live in `references/vaults/VAULTS.md`, which
+*is* ours to edit.
+
+### Verifying it works
+
+Three different questions, three different checks. Run them in order.
+
+**1. Is the plumbing right?** (seconds, run it any time)
+
+```bash
+./scripts/verify-vaults.sh
+```
+
+Checks that the vaults are bundled and non-empty, that `SKILL.md` still carries the
+instructions telling the skill to use them, that every installed copy matches this
+folder, that the vault's internal links all still resolve (this is the canary for an
+upstream restructure), that timeline entries still carry source links, and how far
+behind upstream the snapshot is. Green means the wiring is intact — it says nothing
+about output quality.
+
+**2. Does the skill actually use them?** (one real run)
+
+Run the skill on a venture in one of the two fields and watch what it reads.
+
+Working looks like: it opens `references/vaults/VAULTS.md`, then the relevant
+`index.md`, then **two to four** theme or entity pages — and talks about the field's
+funding and policy state *before* it starts searching the web. On a venture outside
+both fields it should say so in one line and skip them.
+
+Broken looks like:
+- It reads a whole vault, or a dozen-plus files — it's ignoring the read protocol.
+- A vault path, a digest filename, or a `[[wiki-link]]` appears in the brief or the
+  report — the citation rule has failed, and that's the most damaging failure mode
+  here, because internal file paths are not sources.
+- It writes "no competitors found" and the support for that is vault silence.
+- It never opens the vaults at all on an obviously K12 or Head Start venture.
+
+**3. Does it make the report better?** (the only question that really matters)
+
+This needs the `skill-testing` harness, and it needs a test case in one of the two
+fields — every current case is CarePath DSP (I/DD), which correctly doesn't trigger
+the vaults at all, so the suite cannot see this change. Add a K12 or Head Start case,
+then run the suite against a vault-wired build and a stripped one:
+
+```bash
+cd ../skill-testing
+THRIVE_SKILL_DIR=~/Workspace/thrive/thrive-desk-research python run.py   # vaults on
+```
+
+The harness records which skill version produced each result, so the two runs stay
+comparable. Look for a sharper why-now, correctly classified rule durability, and
+named funding channels — not just a longer report.
+
+### Installing a local build
+
+`install.sh` fetches `SKILL.md` and `README.md` from the published repo, so it does
+**not** carry the vault bundle. To install what's in this folder, vaults included,
+use **`./install-local.sh`** — it copies the whole folder into every Claude config
+root on the machine (`~/.claude`, `~/.claude-work`, `$CLAUDE_CONFIG_DIR`).
 
 ### Packaging a fresh zip (for Desktop/Claude.ai distribution)
 
@@ -174,7 +266,9 @@ zip -r thrive-desk-research.zip thrive-desk-research \
   -x '*/.opencode/*' '*/.git/*' '*/.DS_Store'
 ```
 
-Share that `.zip`; teammates install it via the steps in **Option A** above.
+Share that `.zip`; teammates install it via the steps in **Option A** above. The zip
+includes `references/vaults/`, which adds roughly 800 KB — run
+`./scripts/refresh-vaults.sh` first so the snapshot you ship is current.
 
 ---
 
